@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import "../css/AdminProfileChanges.css";
 export default function AdminProfileChanges() {
 
   const camelToSnake = (key) =>
@@ -450,12 +450,12 @@ export default function AdminProfileChanges() {
     await loadData();
 
   };
+return (
+  <div className="profile-container">
+    <h2 className="title">Pending Profile Change Requests</h2>
 
-  return (
-    <div>
-      <h2>Pending Profile Change Requests</h2>
-
-      <table border="1" cellPadding="8" width="100%">
+    <div className="table-card">
+      <table className="modern-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -467,40 +467,55 @@ export default function AdminProfileChanges() {
         </thead>
 
         <tbody>
-          {items.length === 0 && (
-            <tr>
-              <td colSpan="5">No pending requests</td>
-            </tr>
-          )}
-
-          {items.map(r => (
+          {items.map((r) => (
             <tr key={r.id}>
-              <td>{r.id}</td>
-              <td>{r.role === "supplier" ? "Supplier" : "Restaurant"}</td>
-              <td>{r.entity_id}</td>
+              <td>#{r.id}</td>
+
               <td>
-                {SECTION_LABELS[r.section] || r.section}
-                {r.section === "branch" && r.target_row_id && (
-                  <span style={{ color: "#888" }}>
-                    {" "} (ID: {r.target_row_id})
-                  </span>
-                )}
+               <span className="role-badge">
+              <span className="role-icon"></span>
+              {r.role || "-"}
+            </span>
               </td>
 
+              <td>{r.entity_id || "-"}</td>
+
               <td>
-                {/* STEP 1: VIEW */}
-                {selectedId !== r.id && (
-                  <button onClick={() => setSelectedId(r.id)}>
+                <span className="section-badge">
+                  {SECTION_LABELS[r.section] || r.section}
+                </span>
+              </td>
+
+              <td className="action-buttons">
+                {selectedId !== r.id ? (
+                  <button
+                    className="btn view"
+                    onClick={() => setSelectedId(r.id)}
+                  >
                     View
                   </button>
-                )}
-
-                {/* STEP 2: APPROVE / REJECT */}
-                {selectedId === r.id && (
+                ) : (
                   <>
-                    <button onClick={() => approve(r.id)}>Approve</button>
-                    <button onClick={() => reject(r.id)}>Reject</button>
-                    <button onClick={() => setSelectedId(null)}>Cancel</button>
+                    <button
+                      className="btn approve"
+                      onClick={() => approve(r.id)}
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      className="btn reject"
+                      onClick={() => reject(r.id)}
+                    >
+                      Reject
+                    </button>
+
+                    <button
+                      className="btn cancel"
+                      onClick={() => setSelectedId(null)}
+                    >
+                      Cancel
+                    </button>
                   </>
                 )}
               </td>
@@ -508,78 +523,58 @@ export default function AdminProfileChanges() {
           ))}
         </tbody>
       </table>
-
-      {/* OPTIONAL: DETAIL VIEW */}
-      {selectedItem &&
-        // selectedItem.new_data &&
-        selectedItem.section !== "files" && (
-          <div style={{ marginTop: 20 }}>
-            <h3>Changed Fields</h3>
-
-            {allKeys.map((key) => (
-              <div key={key} style={{ marginBottom: 6 }}>
-                <b>{FIELD_LABELS[key] || key}</b>:{" "}
-                <span style={{ color: "red" }}>
-                  {key in normalizedOld ? normalizedOld[key] : "(new)"}
-                  {/* {normalizedOld[key] ?? "-"} */}
-                </span>
-                {" → "}
-                <span style={{ color: "green" }}>
-                  {normalizedNew[key] ?? "-"}
-                </span>
-              </div>
-            ))}
-
-          </div>
-        )}
-
-      {selectedItem &&
-        (selectedItem.section === "branch" || selectedItem.section === "store") &&
-        (!selectedItem.old_data || Object.keys(selectedItem.old_data).length === 0) && (
-          <div style={{ color: "green", marginBottom: 10 }}>
-            🆕 New {selectedItem.section} creation request
-          </div>
-        )}
-
-      {selectedItem &&
-        (selectedItem.section === "branch" || selectedItem.section === "store") &&
-        selectedItem.old_data &&
-        Object.keys(selectedItem.old_data).length > 0 && (
-          <div style={{ color: "blue", marginBottom: 10 }}>
-            ✏️ {selectedItem.section} update request
-          </div>
-        )}
-
-      {selectedItem &&
-        selectedItem.section === "files" && (
-          <div style={{ marginTop: 20 }}>
-            <h3>Documents (Old vs New)</h3>
-
-            {fileKeys.map(key => (
-
-              // {Object.keys({ ...oldFiles, ...newFiles }).map(key => (
-              <div key={key} style={{ marginBottom: 30 }}>
-                <h4>{FILE_LABELS[key] || key}</h4>
-
-                <div style={{ display: "flex", gap: 30 }}>
-
-                  {/* OLD FILE */}
-                  <div>
-                    <p style={{ color: "red" }}>Old (Approved)</p>
-                    {renderFilePreview(normalizedOldFiles[key], key)}
-                  </div>
-
-                  {/* NEW FILE */}
-                  <div>
-                    <p style={{ color: "green" }}>New (Pending)</p>
-                    {renderFilePreview(normalizedNewFiles[key], key)}
-                  </div>
-
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
     </div>
-  );
+
+    {/* ===== DETAILS ===== */}
+    {selectedItem && selectedItem.section !== "files" && (
+      <div className="details-card">
+        <h3>Changed Fields</h3>
+
+        <div className="compare-table">
+          {allKeys.map((key) => {
+            const oldVal = normalizedOld[key];
+            const newVal = normalizedNew[key];
+            const isSame = oldVal === newVal;
+
+            return (
+              <div key={key} className="compare-row">
+
+                {/* LABEL */}
+                <div className="field-label">
+                  {FIELD_LABELS[key] || key}:
+                </div>
+
+                {/* VALUES */}
+                <div className="field-values">
+                {isSame ? (
+                  <span className="same-badge">
+                    {newVal ?? "-"}
+                  </span>
+                ) : (
+                  <>
+                    {/* OLD → RED */}
+                    <span className="old-badge">
+                      {oldVal ?? "-"}
+                    </span>
+
+                    <span className="arrow">→</span>
+
+                    {/* NEW → GREEN */}
+                    <span className="new-badge">
+                      {newVal ?? "-"}
+                    </span>
+                  </>
+                )}
+              </div>
+
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    )}
+  </div>
+)
 }
+;

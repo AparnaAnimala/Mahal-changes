@@ -761,7 +761,6 @@
 #         cur.close()
 #         conn.close()
 
-
 from flask import Blueprint, request, jsonify
 from db import get_db_connection
 from psycopg2.extras import RealDictCursor
@@ -814,16 +813,16 @@ def checkout():
 
     try:
         # ================= CREDIT LOCK =================
-        cur.execute("""
-            SELECT credit_limit, credit_used, credit_days, is_credit_blocked
-            FROM restaurant_registration
-            WHERE restaurant_id = %s
-            FOR UPDATE
-        """, (restaurant_id,))
-        credit_info = cur.fetchone()
+        # cur.execute("""
+        #     SELECT credit_limit, credit_used, credit_days, is_credit_blocked
+        #     FROM restaurant_registration
+        #     WHERE restaurant_id = %s
+        #     FOR UPDATE
+        # """, (restaurant_id,))
+        # credit_info = cur.fetchone()
 
-        if payment_method == "CREDIT" and credit_info["is_credit_blocked"]:
-            return jsonify({"error": "Credit account is blocked"}), 400
+        # if payment_method == "CREDIT" and credit_info["is_credit_blocked"]:
+        #     return jsonify({"error": "Credit account is blocked"}), 400
 
         # ================= CART LOCK =================
         cur.execute("""
@@ -876,83 +875,102 @@ def checkout():
             order_time = datetime.now()
 
             # ================= CREDIT =================
-            credit_due_date = None
-            credit_status = None
-            payment_status = "UNPAID"
+            # credit_due_date = None
+            # credit_status = None
+            # payment_status = "UNPAID"
 
-            remaining_credit = 0
-            limit_val = float(credit_info["credit_limit"] or 0)
-            used_val = float(credit_info["credit_used"] or 0)
-            credit_days = int(credit_info["credit_days"] or 0)
+            # remaining_credit = 0
+            # limit_val = float(credit_info["credit_limit"] or 0)
+            # used_val = float(credit_info["credit_used"] or 0)
+            # credit_days = int(credit_info["credit_days"] or 0)
 
-            if payment_method == "CREDIT":
+            # if payment_method == "CREDIT":
 
-                available_credit = limit_val - used_val
+            #     available_credit = limit_val - used_val
 
-                if subtotal > available_credit:
-                    return jsonify({
-                        "error": f"Credit limit exceeded. Available: {available_credit}"
-                    }), 400
+            #     if subtotal > available_credit:
+            #         return jsonify({
+            #             "error": f"Credit limit exceeded. Available: {available_credit}"
+            #         }), 400
 
-                cur.execute("""
-                    UPDATE restaurant_registration
-                    SET credit_used = credit_used + %s
-                    WHERE restaurant_id = %s
-                """, (subtotal, restaurant_id))
+            #     cur.execute("""
+            #         UPDATE restaurant_registration
+            #         SET credit_used = credit_used + %s
+            #         WHERE restaurant_id = %s
+            #     """, (subtotal, restaurant_id))
 
-                remaining_credit = available_credit - subtotal
-                credit_due_date = order_time.date() + timedelta(days=credit_days)
-                credit_status = "PENDING"
+            #     remaining_credit = available_credit - subtotal
+            #     credit_due_date = order_time.date() + timedelta(days=credit_days)
+            #     credit_status = "PENDING"
 
             # ================= PAYMENT =================
-            if payment_method == "CREDIT":
-                restaurant_paid_amount = 0
-                restaurant_due_amount = subtotal
-                restaurant_payment_status = "UNPAID"
+            # if payment_method == "CREDIT":
+            #     restaurant_paid_amount = 0
+            #     restaurant_due_amount = subtotal
+            #     restaurant_payment_status = "UNPAID"
 
-                supplier_paid_amount = 0
-                supplier_due_amount = subtotal
-                supplier_payment_status = "UNPAID"
-            else:
-                restaurant_paid_amount = subtotal
-                restaurant_due_amount = 0
-                restaurant_payment_status = "PAID"
+            #     supplier_paid_amount = 0
+            #     supplier_due_amount = subtotal
+            #     supplier_payment_status = "UNPAID"
+            # else:
+            #     restaurant_paid_amount = subtotal
+            #     restaurant_due_amount = 0
+            #     restaurant_payment_status = "PAID"
 
-                supplier_paid_amount = 0
-                supplier_due_amount = subtotal
-                supplier_payment_status = "UNPAID"
+            #     supplier_paid_amount = 0
+            #     supplier_due_amount = subtotal
+            #     supplier_payment_status = "UNPAID"
 
             # ================= ORDER HEADER =================
+            # cur.execute("""
+            #     INSERT INTO order_header (
+            #         order_id, restaurant_id, supplier_id, order_date,
+            #         status, payment_status, total_amount, remarks,
+            #         payment_method, credit_due_date, credit_status,
+            #         restaurant_paid_amount, restaurant_due_amount, restaurant_payment_status,
+            #         supplier_paid_amount, supplier_due_amount, supplier_payment_status
+            #     )
+            #     VALUES (%s,%s,%s,%s,
+            #             'PLACED',%s,%s,%s,
+            #             %s,%s,%s,
+            #             %s,%s,%s,
+            #             %s,%s,%s)
+            # """, (
+            #     order_id,
+            #     restaurant_id,
+            #     supplier_id,
+            #     order_time,
+            #     payment_status,
+            #     subtotal,
+            #     data.get("note"),
+            #     payment_method,
+            #     credit_due_date,
+            #     credit_status,
+            #     restaurant_paid_amount,
+            #     restaurant_due_amount,
+            #     restaurant_payment_status,
+            #     supplier_paid_amount,
+            #     supplier_due_amount,
+            #     supplier_payment_status
+            # ))
+
             cur.execute("""
                 INSERT INTO order_header (
                     order_id, restaurant_id, supplier_id, order_date,
                     status, payment_status, total_amount, remarks,
-                    payment_method, credit_due_date, credit_status,
-                    restaurant_paid_amount, restaurant_due_amount, restaurant_payment_status,
-                    supplier_paid_amount, supplier_due_amount, supplier_payment_status
+                    payment_method
                 )
                 VALUES (%s,%s,%s,%s,
-                        'PLACED',%s,%s,%s,
-                        %s,%s,%s,
-                        %s,%s,%s,
-                        %s,%s,%s)
+                        'PLACED','UNPAID',%s,%s,
+                        %s)
             """, (
                 order_id,
                 restaurant_id,
                 supplier_id,
                 order_time,
-                payment_status,
                 subtotal,
                 data.get("note"),
-                payment_method,
-                credit_due_date,
-                credit_status,
-                restaurant_paid_amount,
-                restaurant_due_amount,
-                restaurant_payment_status,
-                supplier_paid_amount,
-                supplier_due_amount,
-                supplier_payment_status
+                payment_method
             ))
 
             # ================= SUPPLIER NOTIFICATION =================
@@ -1320,4 +1338,4 @@ def notifications_count():
 
     finally:
         cur.close()
-        conn.close()  
+        conn.close()

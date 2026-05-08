@@ -2,8 +2,9 @@ import React, { useEffect, useState, useMemo } from "react";
 
 import axios from "axios";
 import Select from "react-select";
+import "../css/ManagePaidPromotions.css";
 
-const API = "http://127.0.0.1:5000/api/admin/promotions";
+const API = "http://192.168.2.21:5000/api/admin/promotions";
 
 export default function ManagePaidPromotions() {
 
@@ -788,14 +789,7 @@ export default function ManagePaidPromotions() {
                     Right Slider 3
                   </option>
 
-                  {/* OPTIONAL: KEEP OLD (if still used elsewhere) */}
-                  <option value="GRID_SUPPLIER_1">
-                    Supplier Grid 1 (Top)
-                  </option>
-
-                  <option value="GRID_SUPPLIER_2">
-                    Supplier Grid 2 (Bottom)
-                  </option>
+                  
 
                 </select>
 

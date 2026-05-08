@@ -133,7 +133,7 @@
 //                   name="price"
 //                   value={form.price}
 //                   onChange={handleChange}
-//                   placeholder="₹"
+//                   placeholder="QAR "
 //                 />
 //               </div>
 

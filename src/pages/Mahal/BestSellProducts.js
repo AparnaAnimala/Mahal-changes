@@ -10,7 +10,7 @@ import "swiper/css/navigation";
 
 import bannerImg from "../../images/side_img1.jpg";
 
-const API_BASE = "http://127.0.0.1:5000"; // ✅ SAME AS SECOND FILE
+const API_BASE = "http://192.168.2.21:5000"; // ✅ SAME AS SECOND FILE
 
 /* PRICE FIX */
 const parsePrice = (val) => {
@@ -20,6 +20,7 @@ const parsePrice = (val) => {
 
 const BestSellProducts = () => {
   const [products, setProducts] = useState([]);
+  const [ratings, setRatings] = useState({});
 
   /* ================= FETCH ================= */
   useEffect(() => {
@@ -32,16 +33,50 @@ const BestSellProducts = () => {
           return fetch(`${API_BASE}/api/gridlist`)
             .then((res) => res.json())
             .then((data2) => {
-              setProducts(data2.products || []);
+               const list = data2.products || [];
+            setProducts(list);
+            fetchRatings(list);
             });
         }
 
         setProducts(items);
+        fetchRatings(items);
       })
       .catch((err) => {
         console.error("FETCH ERROR:", err);
       });
   }, []);
+
+
+    const fetchRatings = async (products) => {
+      try {
+        const ratingData = {};
+
+        await Promise.all(
+          products.map(async (p) => {
+            try {
+              const res = await fetch(
+                '${API_BASE}/api/reviews/products/${p.id}'
+              );
+              const data = await res.json();
+
+              if (data.length > 0) {
+                const total = data.reduce((sum, r) => sum + r.rating, 0);
+                ratingData[p.id] = total / data.length;
+              } else {
+                ratingData[p.id] = 0;
+              }
+            } catch {
+              ratingData[p.id] = 0;
+            }
+          })
+        );
+
+        setRatings(ratingData);
+      } catch (err) {
+        console.error("Rating fetch error:", err);
+      }
+    };
 
   /* ================= ADD TO CART (LIKE SECOND FILE) ================= */
   const addToCart = (item) => {
@@ -153,20 +188,27 @@ const BestSellProducts = () => {
 
                       {/* IMAGE */}
                       <div className="mm-product-img">
-                        <img
-                          src={
-                            p.img1 ||
-                            `${API_BASE}/static/products/default.png`
-                          }
-                          alt={p.name}
-                        />
+                       <img
+                        src={
+                          p.img1 && p.img1.trim() !== ""
+                            ? p.img1.startsWith("http")
+                              ? p.img1
+                              : `${API_BASE}/${p.img1}`
+                            : null
+                        }
+                        alt={p.name}
+                        onError={(e) => {
+                          console.log("Image failed:", p.img1);
+                          e.target.style.display = "none";
+                        }}
+                      />
                       </div>
 
                       {/* CONTENT */}
                       <div className="mm-product-content">
 
                         {/* RATING */}
-                        <div className="mm-rating">
+                        {/* <div className="mm-rating">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <FaStar
                               key={i}
@@ -175,6 +217,29 @@ const BestSellProducts = () => {
                               }
                             />
                           ))}
+                        </div> */}
+
+                        {/* RATING */}
+                        <div
+                          className="mm-rating"
+                        >
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <FaStar
+                              key={i}
+                              color={
+                                i < Math.round(ratings[p.id] || 0)
+                                  ? "#f59e0b"
+                                  : "#d1d5db"
+                              }
+                              size={13}
+                            />
+                          ))}
+
+                          <span
+                            
+                          >
+                            ({(ratings[p.id] || 0).toFixed(1)})
+                          </span>
                         </div>
 
                         {/* TITLE */}
@@ -188,12 +253,12 @@ const BestSellProducts = () => {
                         {/* PRICE */}
                         <div className="mm-price">
                           <span className="mm-new">
-                            ₹{price}
+                            QAR {price}
                           </span>
 
                           {old > price && (
                             <span className="mm-old">
-                              ₹{old}
+                              QAR {old}
                             </span>
                           )}
                         </div>

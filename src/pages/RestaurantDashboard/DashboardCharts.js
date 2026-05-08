@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import {
   Chart as ChartJS,
@@ -10,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line, Bar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 ChartJS.register(
   CategoryScale,
@@ -20,16 +23,29 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
 const DashboardCharts = ({ salesTourId, ordersTourId }) => {
 
-  const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+  const { t } = useTranslation();
+
+  const labels = [
+  t("resjan"),
+  t("resfeb"),
+  t("resmar"),
+
+
+
+
+  t("resapr"),
+  t("resmay"),
+  t("resjun"),
+];
+  
 
   const salesData = {
     labels,
     datasets: [
       {
-        label: "Sales (₹)",
+        label: t("ressales_label"),
         data: [12000, 19000, 15000, 22000, 18000, 26000],
         borderColor: "#ff7a00",
         backgroundColor: "rgba(255, 122, 0, 0.2)",
@@ -42,7 +58,7 @@ const DashboardCharts = ({ salesTourId, ordersTourId }) => {
     labels,
     datasets: [
       {
-        label: "Orders",
+        label: t("resorders"),
         data: [45, 60, 52, 70, 66, 80],
         backgroundColor: "#ff7a00",
       },
@@ -56,7 +72,7 @@ const DashboardCharts = ({ salesTourId, ordersTourId }) => {
       <div className="col-lg-6">
         <div className="card" id={salesTourId}>
           <div className="card-header">
-            <h5>Sales Overview</h5>
+            <h5>{t("ressales_overview")}</h5>
           </div>
           <div className="card-body">
             <Line data={salesData} />
@@ -68,7 +84,7 @@ const DashboardCharts = ({ salesTourId, ordersTourId }) => {
       <div className="col-lg-6">
         <div className="card" id={ordersTourId}>
           <div className="card-header">
-            <h5>Orders Overview</h5>
+           <h5>{t("resorders_overview")}</h5>
           </div>
           <div className="card-body">
             <Bar data={ordersData} />

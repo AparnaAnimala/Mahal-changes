@@ -1,7 +1,7 @@
 // import React, { useState, useEffect, useRef } from "react";
 // import signImg from "../images/sign_in_img_1.jpg";
 // import { Link } from "react-router-dom";
-// const API_BASE_URL = "http://127.0.0.1:5000/api/suppliers";
+// const API_BASE_URL = "http://192.168.2.21:5000/api/suppliers";
 
 // export default function Register() {
 //   const [step, setStep] = useState(1);
@@ -384,7 +384,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import signImg from "../images/sign_in_img_1.jpg";
 import { Link } from "react-router-dom";
-const API_BASE_URL = "http://127.0.0.1:5000/api/suppliers";
+const API_BASE_URL = "http://192.168.2.21:5000/api/suppliers";
 
 export default function Register() {
   const [step, setStep] = useState(1);

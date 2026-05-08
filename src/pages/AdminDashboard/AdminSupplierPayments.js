@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/admincredit.css";
 
-const API = "http://192.168.1.193:5000/api/admin/supplier-payments";
+const API = "http://192.168.2.21:5000/api/admin/supplier-payments";
 
 export default function AdminSupplierPayments() {
 
@@ -31,6 +31,17 @@ export default function AdminSupplierPayments() {
   const [paidOrders, setPaidOrders] = useState([]);
 const [showPaid, setShowPaid] = useState(false);
 const [activeTab, setActiveTab] = useState("PENDING"); 
+// PENDING filters
+const [pendingSearch, setPendingSearch] = useState("");
+const [pendingRestaurant, setPendingRestaurant] = useState(null);
+const [pendingPaymentStatus, setPendingPaymentStatus] = useState("ALL");
+const [pendingOrderStatus, setPendingOrderStatus] = useState("ALL");
+const [pendingMinDue, setPendingMinDue] = useState("");
+
+// PAID filters
+const [paidSearch, setPaidSearch] = useState("");
+const [paidRestaurant, setPaidRestaurant] = useState(null);
+const [paidPaymentStatus, setPaidPaymentStatus] = useState("ALL");
 
 const loadPaidOrders = async (supplierId) => {
   const res = await fetch(`${API}/paid-orders/${supplierId}`, {
@@ -224,25 +235,31 @@ const loadRestaurants = async (supplierId) => {
   setRestaurants(Array.isArray(data) ? data : []);
 };
 
+const getRestaurantId = (o) =>
+  o.restaurant_id ||
+  o.restaurantId ||
+  o.rest_id ||
+  o.restaurant?.restaurant_id;
+
 const filteredOrders = orders.filter(o => {
 
   if (searchOrder && !String(o.order_id).includes(searchOrder))
     return false;
 
-  if (
-  restaurantFilter !== null &&
-  Number(o.restaurant_id) !== restaurantFilter
-) return false;
-   
+  const restId = getRestaurantId(o);
 
-  // ✅ Payment status filter
+  if (
+    restaurantFilter !== null &&
+    String(restId) !== String(restaurantFilter)
+  )
+    return false;
+
   if (
     paymentStatusFilter !== "ALL" &&
     o.supplier_payment_status !== paymentStatusFilter
   )
     return false;
 
-  // ✅ Order status filter
   if (
     orderStatusFilter !== "ALL" &&
     o.status !== orderStatusFilter
@@ -252,6 +269,62 @@ const filteredOrders = orders.filter(o => {
   if (
     minDue &&
     Number(o.supplier_due_amount) < Number(minDue)
+  )
+    return false;
+
+  return true;
+});
+
+const filteredPaidOrders = paidOrders.filter(o => {
+
+  if (paidSearch && !String(o.order_id).includes(paidSearch))
+    return false;
+
+  const restId = getRestaurantId(o);
+
+  if (
+    paidRestaurant !== null &&
+    String(restId) !== String(paidRestaurant)
+  )
+    return false;
+
+  if (
+    paidPaymentStatus !== "ALL" &&
+    o.supplier_payment_status !== paidPaymentStatus
+  )
+    return false;
+
+  return true;
+});
+
+const filteredPendingOrders = orders.filter(o => {
+
+  if (pendingSearch && !String(o.order_id).includes(pendingSearch))
+    return false;
+
+  const restId = getRestaurantId(o);
+
+  if (
+    pendingRestaurant !== null &&
+    String(restId) !== String(pendingRestaurant)
+  )
+    return false;
+
+  if (
+    pendingPaymentStatus !== "ALL" &&
+    o.supplier_payment_status !== pendingPaymentStatus
+  )
+    return false;
+
+  if (
+    pendingOrderStatus !== "ALL" &&
+    o.status !== pendingOrderStatus
+  )
+    return false;
+
+  if (
+    pendingMinDue &&
+    Number(o.supplier_due_amount) < Number(pendingMinDue)
   )
     return false;
 
@@ -289,7 +362,7 @@ const filteredOrders = orders.filter(o => {
 
           {suppliers.map(s => (
             <option key={s.supplier_id} value={s.supplier_id}>
-              {s.supplier_name} — Due QAR {s.total_due}
+              {s.supplier_name} — Due QAR  {s.total_due}
             </option>
           ))}
         </select>
@@ -314,102 +387,154 @@ const filteredOrders = orders.filter(o => {
           <div className="col-md-8">
 
             <div className="card p-2 mb-3">
+  <div className="row">
 
-              <div className="row">
+    {/* 🔵 PENDING FILTERS */}
+    {activeTab === "PENDING" && (
+      <>
+        <div className="col-md-3">
+          <label>Search</label>
+          <input
+            className="form-control"
+            value={pendingSearch}
+            onChange={(e) => setPendingSearch(e.target.value)}
+          />
+        </div>
 
-                {/* Search Order */}
-                <div className="col-md-3">
-                  <label>Search Order ID</label>
-                  <input
-                    className="form-control"
-                    placeholder="Order ID..."
-                    value={searchOrder}
-                    onChange={(e) => setSearchOrder(e.target.value)}
-                  />
-                </div>
+        <div className="col-md-3">
+          <label>Restaurant</label>
+          <select
+            className="form-control"
+            value={pendingRestaurant ?? ""}
+            onChange={(e) =>
+              setPendingRestaurant(
+                e.target.value ? Number(e.target.value) : null
+              )
+            }
+          >
+            <option value="">All</option>
+            {restaurants.map(r => (
+              <option key={r.restaurant_id} value={r.restaurant_id}>
+                {r.restaurant_name_english}
+              </option>
+            ))}
+          </select>
+        </div>
 
-                {/* Restaurant Filter */}
-                <div className="col-md-3">
-                  <label>Restaurant</label>
-                  <select
-                    className="form-control"
-                    value={restaurantFilter || ""}
-                    onChange={(e) =>
-                      setRestaurantFilter(
-                        e.target.value ? Number(e.target.value) : null
-                      )
-                    }
-                  >
-                    <option value="">All</option>
+        <div className="col-md-2">
+          <label>Payment</label>
+          <select
+            className="form-control"
+            value={pendingPaymentStatus}
+            onChange={(e) => setPendingPaymentStatus(e.target.value)}
+          >
+            <option value="ALL">All</option>
+            <option value="UNPAID">Unpaid</option>
+            <option value="PARTIAL">Partial</option>
+          </select>
+        </div>
 
-                    {restaurants.map(r => (
-                      <option key={r.restaurant_id} value={r.restaurant_id}>
-                        {r.restaurant_name_english}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+        <div className="col-md-2">
+          <label>Order</label>
+          <select
+            className="form-control"
+            value={pendingOrderStatus}
+            onChange={(e) => setPendingOrderStatus(e.target.value)}
+          >
+            <option value="ALL">All</option>
+            <option value="PLACED">Placed</option>
+            <option value="OUT_FOR_DELIVERY">Out</option>
+            <option value="DELIVERED">Delivered</option>
+          </select>
+        </div>
 
-                {/* Status */}
-                <div className="col-md-3">
-                  <label>Status</label>
-                  <select
-                    className="form-control"
-                    value={paymentStatusFilter}
-                    onChange={(e) => setPaymentStatusFilter(e.target.value)}
-                  >
-                    <option value="ALL">All</option>
-                    <option value="UNPAID">Unpaid</option>
-                    <option value="PARTIAL">Partial</option>
-                    <option value="PAID">Paid</option>
-                  </select>
-                </div>
+        <div className="col-md-2">
+          <label>Min Due</label>
+          <input
+            className="form-control"
+            value={pendingMinDue}
+            onChange={(e) => setPendingMinDue(e.target.value)}
+          />
+        </div>
 
-                <div className="col-md-2">
-                  <label>Order Status</label>
-                  <select
-                    className="form-control"
-                    value={orderStatusFilter}
-                    onChange={(e) => setOrderStatusFilter(e.target.value)}
-                  >
-                    <option value="ALL">All</option>
-                    <option value="PLACED">Placed</option>
-                    <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
-                    <option value="DELIVERED">Delivered</option>
-                  </select>
-                </div>
+        <div className="col-md-12 mt-2">
+          <button
+            className="btn btn-secondary w-100"
+            onClick={() => {
+              setPendingSearch("");
+              setPendingRestaurant(null);
+              setPendingPaymentStatus("ALL");
+              setPendingOrderStatus("ALL");
+              setPendingMinDue("");
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
+      </>
+    )}
 
-                {/* Min Due */}
-                <div className="col-md-2">
-                  <label>Min Due</label>
-                  <input
-                    className="form-control"
-                    placeholder="QAR"
-                    value={minDue}
-                    onChange={(e) => setMinDue(e.target.value)}
-                  />
-                </div>
+    {/* 🟢 PAID FILTERS */}
+    {activeTab === "PAID" && (
+      <>
+        <div className="col-md-4">
+          <label>Search</label>
+          <input
+            className="form-control"
+            value={paidSearch}
+            onChange={(e) => setPaidSearch(e.target.value)}
+          />
+        </div>
 
-                {/* Reset */}
-                <div className="col-md-1 d-flex align-items-end">
-                  <button
-                    className="btn btn-secondary w-100"
-                    onClick={() => {
-                      setSearchOrder("");
-                      setRestaurantFilter(null);
-                      setPaymentStatusFilter("ALL");
-                      setOrderStatusFilter("ALL");
-                      setStatusFilter("ALL");
-                      setMinDue("");
-                    }}
-                  >
-                    ↺
-                  </button>
-                </div>
+        <div className="col-md-4">
+          <label>Restaurant</label>
+          <select
+            className="form-control"
+            value={paidRestaurant ?? ""}
+            onChange={(e) =>
+              setPaidRestaurant(
+                e.target.value ? Number(e.target.value) : null
+              )
+            }
+          >
+            <option value="">All</option>
+            {restaurants.map(r => (
+              <option key={r.restaurant_id} value={r.restaurant_id}>
+                {r.restaurant_name_english}
+              </option>
+            ))}
+          </select>
+        </div>
 
-              </div>
+        <div className="col-md-4">
+          <label>Status</label>
+          <select
+            className="form-control"
+            value={paidPaymentStatus}
+            onChange={(e) => setPaidPaymentStatus(e.target.value)}
+          >
+            <option value="ALL">All</option>
+            <option value="PAID">Paid</option>
+          </select>
+        </div>
 
-            </div>
+        <div className="col-md-12 mt-2">
+          <button
+            className="btn btn-secondary w-100"
+            onClick={() => {
+              setPaidSearch("");
+              setPaidRestaurant(null);
+              setPaidPaymentStatus("ALL");
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
+      </>
+    )}
+
+  </div>
+</div>
 
             <div className="mb-2 d-flex gap-2">
 
@@ -463,12 +588,12 @@ const filteredOrders = orders.filter(o => {
 
                       <td>{o.order_id}</td>
 
-                      <td>QAR {o.total_amount}</td>
+                      <td>QAR  {o.total_amount}</td>
 
-                      <td>QAR {o.supplier_paid_amount}</td>
+                      <td>QAR  {o.supplier_paid_amount}</td>
 
                       <td className="text-danger">
-                        QAR {o.supplier_due_amount}
+                        QAR  {o.supplier_due_amount}
                       </td>
 
                       <td>{o.supplier_payment_status}</td>
@@ -531,7 +656,9 @@ const filteredOrders = orders.filter(o => {
 
     <tbody>
 
-      {(activeTab === "PENDING" ? filteredOrders : paidOrders).map(o => (
+      {(activeTab === "PENDING"
+  ? filteredPendingOrders
+  : filteredPaidOrders).map(o => (
 
         <tr key={o.order_id}>
 
@@ -548,12 +675,12 @@ const filteredOrders = orders.filter(o => {
 
           <td>{o.order_id}</td>
 
-          <td>QAR {o.total_amount}</td>
+          <td>QAR  {o.total_amount}</td>
 
-          <td>QAR {o.supplier_paid_amount}</td>
+          <td>QAR  {o.supplier_paid_amount}</td>
 
           <td className="text-danger">
-            QAR {o.supplier_due_amount}
+            QAR  {o.supplier_due_amount}
           </td>
 
           <td>
@@ -601,7 +728,7 @@ const filteredOrders = orders.filter(o => {
 
       ))}
 
-      {(activeTab === "PENDING" ? filteredOrders : paidOrders).length === 0 && (
+      {(activeTab === "PENDING" ? filteredOrders : filteredPaidOrders).length === 0 && (
         <tr>
           <td colSpan="8" className="text-center">
             No {activeTab === "PENDING" ? "pending" : "paid"} orders
@@ -625,7 +752,7 @@ const filteredOrders = orders.filter(o => {
 
               <h5>Payment Summary</h5>
 
-              <p>Total Due: <b>QAR {totalSelected.toFixed(2)}</b></p>
+              <p>Total Due: <b>QAR  {totalSelected.toFixed(2)}</b></p>
 
               <label>Amount Paying</label>
               <input
@@ -713,9 +840,9 @@ const filteredOrders = orders.filter(o => {
                 <tr key={o.order_id}>
                   <td>{o.order_id}</td>
                   <td>{o.restaurant_name_english}</td>
-                  <td>QAR {o.total_amount}</td>
+                  <td>QAR  {o.total_amount}</td>
                   <td className="text-success">
-                    QAR {o.supplier_paid_amount}
+                    QAR  {o.supplier_paid_amount}
                   </td>
                   <td>
                     <span className="badge bg-success">
@@ -771,7 +898,7 @@ const filteredOrders = orders.filter(o => {
                 {new Date(p.created_at).toLocaleDateString()}
               </td>
 
-              <td>QAR {p.amount}</td>
+              <td>QAR  {p.amount}</td>
 
               <td>{p.payment_mode}</td>
 
@@ -880,7 +1007,7 @@ const filteredOrders = orders.filter(o => {
 
           <div className="credit_small">
             <small>Total Value</small>
-            <div>QAR {viewOrder.total_amount}</div>
+            <div>QAR  {viewOrder.total_amount}</div>
           </div>
 
         </div>
@@ -893,22 +1020,22 @@ const filteredOrders = orders.filter(o => {
         <div className="credit_row">
 
           <div className="credit_small">
-            <small>Restaurant Received</small>
+            <small>Restaurant Paid</small>
             <div className="text-success">
-              QAR {viewOrder.restaurant_paid_amount}
+              QAR  {viewOrder.restaurant_paid_amount}
             </div>
             <small className="text-danger">
-              Pending: QAR {viewOrder.restaurant_due_amount}
+              Pending: QAR  {viewOrder.restaurant_due_amount}
             </small>
           </div>
 
           <div className="credit_small">
             <small>Supplier Paid</small>
             <div className="text-success">
-              QAR {viewOrder.supplier_paid_amount}
+              QAR  {viewOrder.supplier_paid_amount}
             </div>
             <small className="text-danger">
-              Pending: QAR {viewOrder.supplier_due_amount}
+              Pending: QAR  {viewOrder.supplier_due_amount}
             </small>
           </div>
 
@@ -922,7 +1049,7 @@ const filteredOrders = orders.filter(o => {
                 : "text-danger"
               }
             >
-              QAR {(
+              QAR  {(
                 viewOrder.restaurant_paid_amount -
                 viewOrder.supplier_paid_amount
               ).toFixed(2)}

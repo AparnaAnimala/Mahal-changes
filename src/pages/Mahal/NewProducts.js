@@ -236,7 +236,7 @@
 // import { Link } from "react-router-dom";
 // import { FaStar, FaShoppingCart, FaEye, FaHeart } from "react-icons/fa";
 
-// const API_BASE = "http://127.0.0.1:5000";
+// const API_BASE = "http://192.168.2.21:5000";
 
 // const ITEMS_PER_PAGE = 12; // ✅ SHOW 12 PRODUCTS
 
@@ -260,7 +260,7 @@
 //           rating: item.rating || 4,
 //           img:
 //             item.img1 ||
-//             `${API_BASE}/static/products/default.png`,
+//             `${API_BASE}/products/default.png`,
 //         }));
 
 //         setProducts(mapped);
@@ -328,7 +328,7 @@
 //                       alt={item.title}
 //                       onError={(e) => {
 //                         e.target.src =
-//                           `${API_BASE}/static/products/default.png`;
+//                           `${API_BASE}/products/default.png`;
 //                       }}
 //                     />
 //                   </div>
@@ -358,7 +358,7 @@
 //                     </div>
 
 //                     <div className="mm-price">
-//                       ₹{item.price.toFixed(2)}
+//                       QAR {item.price.toFixed(2)}
 //                     </div>
 
 //                   </div>
@@ -391,31 +391,66 @@ const ITEMS_PER_PAGE = 12;
 const NewProducts = () => {
   const [products, setProducts] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
+  const [ratings, setRatings] = useState({}); // ✅ NEW
 
   /* ================= FETCH ================= */
-  useEffect(() => {
-    fetch(`${API_BASE}/api/trending`)
-      .then((res) => res.json())
-      .then((data) => {
-        const items = data.products || [];
+useEffect(() => {
+  fetch(`${API_BASE}/api/trending`)
+    .then((res) => res.json())
+    .then((data) => {
+      const items = data.products || [];
 
-        const mapped = items.map((item) => ({
-          id: item.id,
-          title: item.name,
-          price: item.price_numeric || 0,
-          rating: item.rating || 4,
-          img:
-            item.img1 ||
-            `${API_BASE}/static/products/default.png`,
-        }));
+      const mapped = items.map((item) => ({
+        id: item.id,
+        title: item.name,
+        price: item.price_numeric || 0,
+        rating: item.rating || 4,
+        img:
+          item.img1 && item.img1.trim() !== ""
+            ? item.img1.startsWith("http")
+              ? item.img1
+              : `${API_BASE}/${item.img1}`
+            : null,
+      }));
 
-        setProducts(mapped);
+      setProducts(mapped);
+      fetchRatings(mapped);
+    })
+    .catch((err) => {
+      console.error("❌ Trending API error:", err);
+    });
+}, []);
+
+  /* ================= FETCH RATINGS ================= */
+const fetchRatings = async (products) => {
+  try {
+    const ratingData = {};
+
+    await Promise.all(
+      products.map(async (p) => {
+        try {
+          const res = await fetch(
+            `${API_BASE}/api/reviews/product/${p.id}`
+          );
+          const data = await res.json();
+
+          if (data.length > 0) {
+            const total = data.reduce((sum, r) => sum + r.rating, 0);
+            ratingData[p.id] = total / data.length;
+          } else {
+            ratingData[p.id] = 0;
+          }
+        } catch {
+          ratingData[p.id] = 0;
+        }
       })
-      .catch((err) => {
-        console.error("❌ Trending API error:", err);
-      });
-  }, []);
+    );
 
+    setRatings(ratingData);
+  } catch (err) {
+    console.error("Rating fetch error:", err);
+  }
+};
   /* ================= AUTO CHANGE ================= */
   useEffect(() => {
     if (products.length <= ITEMS_PER_PAGE) return;
@@ -521,80 +556,91 @@ const NewProducts = () => {
           {visibleProducts.length === 0 ? (
             <p className="text-center">Loading products...</p>
           ) : (
-            visibleProducts.map((item) => (
-              <div
-                key={item.id}
-                className="col-xl-2 col-lg-3 col-sm-6 mb-4"
-              >
+            visibleProducts.map((item) => {
+              const ratingValue = ratings[item.id] || 0; // ✅ NEW
 
-                <div className="mm-trending-card">
+              return (
+                <div
+                  key={item.id}
+                  className="col-xl-2 col-lg-3 col-sm-6 mb-4"
+                >
 
-                  <span className="mm-trend-tag new">New</span>
+                  <div className="mm-trending-card">
 
-                  <div className="mm-trending-img">
-                    <img
-                      src={item.img}
+                    <span className="mm-trend-tag new">New</span>
+
+                    <div className="mm-trending-img">
+                     <img
+                      src={
+                        item.img && item.img.trim() !== ""
+                          ? item.img.startsWith("http")
+                            ? item.img
+                            : `${API_BASE}/${item.img}`
+                          : null
+                      }
                       alt={item.title}
                       onError={(e) => {
-                        e.target.src =
-                          `${API_BASE}/static/products/default.png`;
+                        console.log("Image failed:", item.img);
+                        e.target.style.display = "none";
                       }}
                     />
-                  </div>
-
-                  <div className="mm-trend-actions">
-
-                    {/* ADD TO CART */}
-                    <button onClick={() => addToCart(item)}>
-                      <FaShoppingCart />
-                    </button>
-
-                    {/* 👁️ EYE ICON → shopdetails */}
-                    <Link to={`/shopdetails/${item.id}`}>
-                      <FaEye />
-                    </Link>
-
-                    {/* WISHLIST */}
-                    <button onClick={() => addToWishlist(item)}>
-                      <FaHeart />
-                    </button>
-
-                  </div>
-
-                  <div className="mm-trending-info">
-                    <h4>{item.title}</h4>
-
-                    <div className="mm-trend-rating">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <FaStar
-                          key={i}
-                          className={
-                            i < Math.floor(item.rating)
-                              ? "active"
-                              : ""
-                          }
-                        />
-                      ))}
                     </div>
 
-                    <div className="mm-price">
-                      ₹{item.price.toFixed(2)}
+                    <div className="mm-trend-actions">
+
+                      <button onClick={() => addToCart(item)}>
+                        <FaShoppingCart />
+                      </button>
+
+                      <Link to={`/shopdetails/${item.id}`}>
+                        <FaEye />
+                      </Link>
+
+                      <button onClick={() => addToWishlist(item)}>
+                        <FaHeart />
+                      </button>
+
                     </div>
 
-                    {/* ✅ YOUR REQUIRED BUTTON */}
-                    <Link
-                      to={`/shopdetails/${item.id}`}   // ✅ FIXED
-                      className="add_cart_btn"
-                    >
-                      View Product
-                    </Link>
+                    <div className="mm-trending-info">
+                      <h4>{item.title}</h4>
+
+                      {/* ✅ UPDATED RATING */}
+                      <div className="mm-trend-rating">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <FaStar
+                            key={i}
+                            color={
+                              i < Math.round(ratingValue)
+                                ? "#f59e0b"
+                                : "#e5e7eb"
+                            }
+                          />
+                        ))}
+
+                        <span className="ms-1 text-muted">
+                          ({ratingValue.toFixed(1)})
+                        </span>
+                      </div>
+
+                      <div className="mm-price">
+                        QAR{item.price.toFixed(2)}
+                      </div>
+
+                      <Link
+                        to={`/shopdetails/${item.id}`}
+                        className="add_cart_btn"
+                      >
+                        View Product
+                      </Link>
+
+                    </div>
 
                   </div>
 
                 </div>
-
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 

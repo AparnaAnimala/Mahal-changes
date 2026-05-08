@@ -70,7 +70,7 @@ const OrderSuccess = () => {
     const fetchOrder = async () => {
       try {
         const res = await fetch(
-          `http://127.0.0.1:5000/api/v1/orders/restaurant/${orderId}`, // ✅ FIXED
+          `http://192.168.2.21:5000/api/v1/orders/restaurant/${orderId}`, // ✅ FIXED
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -129,7 +129,7 @@ const OrderSuccess = () => {
         </h6>
 
         <h6>
-          Total Amount: <span>₹{order.total_amount}</span>
+          Total Amount: <span>QAR {order.total_amount}</span>
         </h6>
 
         <div className="success_actions">

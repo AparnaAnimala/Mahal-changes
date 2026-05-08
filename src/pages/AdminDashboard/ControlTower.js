@@ -6,7 +6,7 @@ import {
 } from "recharts";
 
 
-const API = "http://127.0.0.1:5000/api/v1/admin/dashboard-metrics";
+const API = "http://192.168.2.21:5000/api/v1/admin/dashboard-metrics";
 
 const COLORS = {
   Pending: "#ff9800",
@@ -16,7 +16,7 @@ const COLORS = {
 
 /* ================= FORMATTERS ================= */
 const formatCurrency = (val) =>
-  `QAR ${Number(val || 0).toLocaleString("en-QA")}`;
+  `QAR  ${Number(val || 0).toLocaleString("en-QA")}`;
 
 const formatPercent = (val) =>
   `${Number(val || 0).toFixed(1)}%`;

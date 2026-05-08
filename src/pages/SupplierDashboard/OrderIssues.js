@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import ResolveIssueModal from "./ResolveIssueModal";
 import ViewIssueModal from "./ViewIssueModal";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const API = "http://127.0.0.1:5000/api/v1";
+const API = "http://192.168.2.21:5000/api/v1";
 
 const OrderIssues = () => {
   const [issues, setIssues] = useState([]);
@@ -14,6 +15,8 @@ const OrderIssues = () => {
   const issueIdFromUrl = searchParams.get("issueId");
 
   const token = localStorage.getItem("token");
+  const { t, i18n } = useTranslation();
+
   const autoReadIssueNotification = (issue) => {
     fetch(`${API}/orders/supplier/notifications/auto-read`, {
       method: "PUT",
@@ -43,7 +46,6 @@ const OrderIssues = () => {
         }
 
         const sortedIssues = [...data].sort((a, b) => {
-          // unresolved first
           if (a.status === "ISSUE_RESOLVED" && b.status !== "ISSUE_RESOLVED") return 1;
           if (a.status !== "ISSUE_RESOLVED" && b.status === "ISSUE_RESOLVED") return -1;
           return 0;
@@ -51,44 +53,43 @@ const OrderIssues = () => {
 
         setIssues(sortedIssues);
       })
-
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-  loadIssues();
-}, []);
+    loadIssues();
+  }, []);
 
-useEffect(() => {
-  if (!issueIdFromUrl || issues.length === 0) return;
-
-  const match = issues.find(
-    i => i.issue_report_id === issueIdFromUrl
-  );
-
-  if (match) {
-    setViewIssue(match); // 👈 opens modal automatically
-  }
-}, [issueIdFromUrl, issues]);
   useEffect(() => {
-  if (!issueIdFromUrl) return;
+    if (!issueIdFromUrl || issues.length === 0) return;
 
-  fetch(`${API}/orders/supplier/notifications/auto-read`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      reference_id: issueIdFromUrl,
-      type: "ORDER_ISSUE",
-    }),
-  }).then(() => {
-    window.dispatchEvent(new Event("refreshNotifications"));
-  });
-}, [issueIdFromUrl, token]);
+    const match = issues.find(
+      i => i.issue_report_id === issueIdFromUrl
+    );
 
-  // ✅ THIS IS THE IMPORTANT PART
+    if (match) {
+      setViewIssue(match);
+    }
+  }, [issueIdFromUrl, issues]);
+
+  useEffect(() => {
+    if (!issueIdFromUrl) return;
+
+    fetch(`${API}/orders/supplier/notifications/auto-read`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        reference_id: issueIdFromUrl,
+        type: "ORDER_ISSUE",
+      }),
+    }).then(() => {
+      window.dispatchEvent(new Event("refreshNotifications"));
+    });
+  }, [issueIdFromUrl, token]);
+
   const handleResolved = (updatedIssue) => {
     fetch(`${API}/orders/supplier/notifications/auto-read`, {
       method: "PUT",
@@ -112,46 +113,68 @@ useEffect(() => {
       )
     );
 
-    // keep modals in sync
     setViewIssue(updatedIssue);
     setSelectedIssue(null);
   };
 
-  if (loading) return <div>Loading issues...</div>;
+  if (loading) return <div>{t("loading_issues")}</div>;
 
+  const isArabic = i18n.language?.startsWith("ar");
+  const formatOrderId = (id) => {
+    if (!isArabic) return id;
 
+    const prefix = String(id).replace(/[0-9]/g, "");
+    const numbers = String(id).replace(/\D/g, "");
+
+    return prefix + formatNumber(numbers);
+  };
+
+  const formatNumber = (num) => {
+    return new Intl.NumberFormat(
+      isArabic ? "ar-EG" : "en-US"
+    ).format(num);
+  };
 
   return (
     <div className="order_issues_page">
-      <h3 className="page_title">Order Issues</h3>
+      <h3 className="page_title">{t("order_issues")}</h3>
 
       <div className="table_wrapper">
         <table className="orders_table">
           <thead>
             <tr>
-              <th>Report ID</th>
-              <th>Order ID</th>
-              <th>Restaurant</th>
-              <th>Issue</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th>{t("report_id")}</th>
+              <th>{t("order_id")}</th>
+              <th>{t("restaurant")}</th>
+              <th>{t("issue")}</th>
+              <th>{t("description")}</th>
+              <th>{t("status")}</th>
+              <th>{t("action")}</th>
             </tr>
           </thead>
 
           <tbody>
             {issues.map((i) => (
               <tr key={i.issue_report_id}>
-                <td>{i.issue_report_id}</td>
-                <td>{i.order_id}</td>
-                <td>{i.restaurant_name_english}</td>
+                <td>{formatOrderId(i.issue_report_id)}</td>
+                <td>{formatOrderId(i.order_id)}</td>
+
+                {/* 🔥 restaurant bilingual */}
+                <td>
+                  {i18n.language === "ar"
+                    ? i.restaurant_name_arabic || i.restaurant_name_english
+                    : i.restaurant_name_english}
+                </td>
+
                 <td>{i.issue_type}</td>
                 <td>{i.description || "—"}</td>
+
                 <td>
                   <span className={`issue_status ${i.status.toLowerCase()}`}>
-                    {i.status}
+                    {t(i.status.toLowerCase())}
                   </span>
                 </td>
+
                 <td>
                   {i.status !== "ISSUE_RESOLVED" ? (
                     <button
@@ -161,7 +184,7 @@ useEffect(() => {
                         setSelectedIssue(i);
                       }}
                     >
-                      Resolve
+                      {t("resolve")}
                     </button>
                   ) : (
                     <button
@@ -171,7 +194,7 @@ useEffect(() => {
                         setViewIssue(i);
                       }}
                     >
-                      View
+                      {t("view")}
                     </button>
                   )}
                 </td>
@@ -181,7 +204,7 @@ useEffect(() => {
             {issues.length === 0 && (
               <tr>
                 <td colSpan="7" style={{ textAlign: "center" }}>
-                  No issues found
+                  {t("no_issues")}
                 </td>
               </tr>
             )}
@@ -189,12 +212,11 @@ useEffect(() => {
         </table>
       </div>
 
-      {/* MODALS */}
       {selectedIssue && (
         <ResolveIssueModal
           issue={selectedIssue}
           onClose={() => setSelectedIssue(null)}
-          onResolved={handleResolved} // ✅ FIXED
+          onResolved={handleResolved}
         />
       )}
 

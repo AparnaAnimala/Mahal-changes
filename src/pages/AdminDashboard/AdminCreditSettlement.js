@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/admincredit.css";
 
-const API = "http://192.168.1.193:5000/api";
+const API = "http://192.168.2.21:5000/api";
 
 export default function AdminCreditSettlement() {
 
@@ -28,7 +28,14 @@ const [minDue, setMinDue] = useState("");
 const [searchOrder, setSearchOrder] = useState("");
 const [activeTab, setActiveTab] = useState("UNPAID");
 const [paidOrders, setPaidOrders] = useState([]);
+// UNPAID filters
+const [unpaidSearch, setUnpaidSearch] = useState("");
+const [unpaidStatus, setUnpaidStatus] = useState("ALL");
+const [unpaidMinDue, setUnpaidMinDue] = useState("");
 
+// PAID filters
+const [paidSearch, setPaidSearch] = useState("");
+const [paidDateFilter, setPaidDateFilter] = useState("");
 const loadPaidOrders = async (restaurantId) => {
   const res = await fetch(
     `${API}/admin/credit/paid-credit-orders/${restaurantId}`,
@@ -224,6 +231,72 @@ const filteredOrders = orders.filter(o => {
 
   return true;
 });
+const filteredPaidOrders = paidOrders.filter(o => {
+
+  if (paidSearch && !String(o.order_id).includes(paidSearch))
+    return false;
+
+  if (paidDateFilter) {
+    const orderDate = new Date(o.order_date).toISOString().slice(0, 10);
+    if (orderDate !== paidDateFilter) return false;
+  }
+
+  return true;
+});
+// const filteredPaidOrders = paidOrders.filter(o => {
+
+//   // 🔎 Search
+//   if (
+//     searchOrder &&
+//     !String(o.order_id).includes(searchOrder)
+//   ) return false;
+
+//   // Status filter (for paid → always PAID)
+//   if (
+//     orderStatusFilter === "UNPAID" ||
+//     orderStatusFilter === "PARTIAL"
+//   ) return false;
+
+//   if (orderStatusFilter === "OVERDUE") {
+//     if (!o.credit_due_date) return false;
+
+//     const dueDate = new Date(o.credit_due_date);
+
+//     if (dueDate >= new Date()) return false;
+//   }
+
+//   // Min Due (paid orders → due = 0)
+//   if (
+//     minDue &&
+//     Number(0) < Number(minDue)
+//   ) return false;
+
+//   return true;
+// });
+
+const filteredUnpaidOrders = orders.filter(o => {
+
+  if (unpaidSearch && !String(o.order_id).includes(unpaidSearch))
+    return false;
+
+  if (unpaidStatus === "UNPAID" && o.payment_status !== "UNPAID")
+    return false;
+
+  if (unpaidStatus === "PARTIAL" && o.payment_status !== "PARTIAL")
+    return false;
+
+  if (unpaidStatus === "OVERDUE") {
+    if (!o.credit_due_date) return false;
+    if (new Date(o.credit_due_date) >= new Date()) return false;
+  }
+
+  if (
+    unpaidMinDue &&
+    Number(o.due_amount || 0) < Number(unpaidMinDue)
+  ) return false;
+
+  return true;
+});
   return (
     <div className="dashboard_page">
 
@@ -269,27 +342,25 @@ const filteredOrders = orders.filter(o => {
           {/* Orders */}
     <div className="col-md-8">
     <div className="card p-2 mb-3">
+  <div className="row">
 
-      <div className="row">
-
-        {/* Search Order */}
-        <div className="col-md-3">
-          <label>Search Order ID</label>
+    {activeTab === "UNPAID" && (
+      <>
+        <div className="col-md-4">
+          <label>Search Order</label>
           <input
             className="form-control"
-            placeholder="Order ID..."
-            value={searchOrder}
-            onChange={(e) => setSearchOrder(e.target.value)}
+            value={unpaidSearch}
+            onChange={(e) => setUnpaidSearch(e.target.value)}
           />
         </div>
 
-        {/* Status */}
-        <div className="col-md-3">
+        <div className="col-md-4">
           <label>Status</label>
           <select
             className="form-control"
-            value={orderStatusFilter}
-            onChange={(e) => setOrderStatusFilter(e.target.value)}
+            value={unpaidStatus}
+            onChange={(e) => setUnpaidStatus(e.target.value)}
           >
             <option value="ALL">All</option>
             <option value="UNPAID">Unpaid</option>
@@ -298,34 +369,67 @@ const filteredOrders = orders.filter(o => {
           </select>
         </div>
 
-        {/* Min Due */}
-        <div className="col-md-3">
-          <label>Min Due Amount</label>
+        <div className="col-md-4">
+          <label>Min Due</label>
           <input
             className="form-control"
-            placeholder="QAR"
-            value={minDue}
-            onChange={(e) => setMinDue(e.target.value)}
+            value={unpaidMinDue}
+            onChange={(e) => setUnpaidMinDue(e.target.value)}
           />
         </div>
 
-        {/* Reset */}
-        <div className="col-md-3 d-flex align-items-end">
+        <div className="col-md-12 mt-2">
           <button
             className="btn btn-secondary w-100"
             onClick={() => {
-              setOrderStatusFilter("ALL");
-              setMinDue("");
-              setSearchOrder("");
+              setUnpaidSearch("");
+              setUnpaidStatus("ALL");
+              setUnpaidMinDue("");
             }}
           >
             Reset Filters
           </button>
         </div>
+      </>
+    )}
 
-      </div>
+    {activeTab === "PAID" && (
+      <>
+        <div className="col-md-6">
+          <label>Search Order</label>
+          <input
+            className="form-control"
+            value={paidSearch}
+            onChange={(e) => setPaidSearch(e.target.value)}
+          />
+        </div>
 
-    </div>
+        <div className="col-md-6">
+          <label>Filter by Date</label>
+          <input
+            type="date"
+            className="form-control"
+            value={paidDateFilter}
+            onChange={(e) => setPaidDateFilter(e.target.value)}
+          />
+        </div>
+
+        <div className="col-md-12 mt-2">
+          <button
+            className="btn btn-secondary w-100"
+            onClick={() => {
+              setPaidSearch("");
+              setPaidDateFilter("");
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
+      </>
+    )}
+
+  </div>
+</div>
     </div>
     </div>
 
@@ -384,7 +488,9 @@ const filteredOrders = orders.filter(o => {
 
                 <tbody>
 
-                  {(activeTab === "UNPAID" ? filteredOrders : paidOrders).map(o => {
+                  {(activeTab === "UNPAID"
+                  ? filteredUnpaidOrders
+                  : filteredPaidOrders).map(o => {
 
                     const isSelected = selectedOrders.includes(o.order_id);
 
@@ -410,17 +516,17 @@ const filteredOrders = orders.filter(o => {
 
                         {/* ✅ UPDATED AMOUNT DISPLAY */}
                         <td>
-                          <div><b>Total:</b> QAR {o.total_amount}</div>
+                          <div><b>Total:</b> QAR  {o.total_amount}</div>
 
                           {o.paid_amount !== undefined && (
                             <div className="text-success">
-                              Paid: QAR {o.paid_amount || 0}
+                              Paid: QAR  {o.paid_amount || 0}
                             </div>
                           )}
 
                           {activeTab === "UNPAID" && o.due_amount !== undefined && (
                             <div className="text-danger">
-                              Due: QAR {o.due_amount || 0}
+                              Due: QAR  {o.due_amount || 0}
                             </div>
                           )}
                         </td>
@@ -485,7 +591,7 @@ const filteredOrders = orders.filter(o => {
               <div className="credit_summary_box">
                 <span>Total Amount</span>
                 <strong className="text-success">
-                  QAR {totalSelected.toFixed(2)}
+                  QAR  {totalSelected.toFixed(2)}
                 </strong>
               </div>
 
@@ -649,18 +755,18 @@ const filteredOrders = orders.filter(o => {
 
           <div className="credit_box">
             <small>Limit</small>
-            <div>QAR {viewOrder?.credit_limit || 0}</div>
+            <div>QAR  {viewOrder?.credit_limit || 0}</div>
           </div>
 
           <div className="credit_box text-danger">
             <small>Used</small>
-            <div>QAR {viewOrder?.credit_used || 0}</div>
+            <div>QAR  {viewOrder?.credit_used || 0}</div>
           </div>
 
           <div className="credit_box text-success">
             <small>Available</small>
             <div>
-              QAR {
+              QAR  {
                 (
                   (Number(viewOrder?.credit_limit) || 0) -
                   (Number(viewOrder?.credit_used) || 0)
@@ -757,7 +863,7 @@ const filteredOrders = orders.filter(o => {
                         : ""}
                     </td>
 
-                    <td>QAR {h.amount}</td>
+                    <td>QAR  {h.amount}</td>
 
                     <td>{h.payment_mode}</td>
 

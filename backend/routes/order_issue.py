@@ -631,7 +631,10 @@ def supplier_issues():
             ir.reported_at,
             ir.resolved_at,
             oh.order_id,
+
+            -- ✅ ADD THIS
             rr.restaurant_name_english,
+            rr.restaurant_name_arabic,
 
             COALESCE(
                 json_agg(
@@ -650,7 +653,8 @@ def supplier_issues():
 
         FROM order_issue_reports ir
         JOIN order_header oh ON oh.order_id = ir.order_id
-        JOIN restaurant_registration rr ON rr.restaurant_id = ir.restaurant_id
+        JOIN restaurant_registration rr 
+            ON rr.restaurant_id = ir.restaurant_id
         LEFT JOIN order_issue_products oip
             ON oip.issue_report_id = ir.issue_report_id
 
@@ -668,6 +672,7 @@ def supplier_issues():
             ir.resolved_at,
             oh.order_id,
             rr.restaurant_name_english,
+            rr.restaurant_name_arabic,  -- ✅ IMPORTANT
             ir.issue_images
 
         ORDER BY ir.reported_at DESC

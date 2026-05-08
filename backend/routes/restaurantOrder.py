@@ -145,17 +145,21 @@ def restaurant_orders():
                 oh.total_amount,
                 oh.status,
                 oh.is_recurring,
-                sr.company_name_english AS supplier_name,
+                sr.company_name_english,
+                sr.company_name_arabic,
+
 
                 json_agg(
                     json_build_object(
-                        'product_name', oi.product_name_english,
+                        'product_name_english', oi.product_name_english,
+                        'product_name_arabic', pm.product_name_arabic,
                         'quantity', oi.quantity
                     )
                 ) AS items
 
             FROM order_header oh
             JOIN order_items oi ON oi.order_id = oh.order_id
+            JOIN product_management pm ON pm.product_id = oi.product_id
             JOIN supplier_registration sr
                 ON sr.supplier_id = oh.supplier_id
 
@@ -187,7 +191,8 @@ def restaurant_orders():
                 oh.total_amount,
                 oh.status,
                 oh.is_recurring,
-                sr.company_name_english
+                sr.company_name_english,
+                sr.company_name_arabic
             ORDER BY oh.order_date DESC
         """
 
@@ -229,6 +234,7 @@ def restaurant_order_details(order_id):
 
                 -- RESTAURANT BASIC
                 rr.restaurant_name_english,
+                rr.restaurant_name_arabic,
                 rr.contact_person_name  AS restaurant_contact_name,
                 rr.contact_person_mobile AS restaurant_contact_mobile,
                 rr.contact_person_email AS restaurant_contact_email,
@@ -242,7 +248,8 @@ def restaurant_order_details(order_id):
                 rs.country  AS restaurant_country,
 
                 -- SUPPLIER BASIC
-                sr.company_name_english AS supplier_name,
+                sr.company_name_english,
+                sr.company_name_arabic,
                 sr.contact_person_name  AS supplier_contact,
                 sr.contact_person_mobile AS supplier_mobile,
                 sr.contact_person_email AS supplier_email,
@@ -288,15 +295,18 @@ def restaurant_order_details(order_id):
         cur.execute(
             """
             SELECT
-                product_id,
-                product_name_english,
-                quantity,
-                price_per_unit,
-                discount,
-                total_amount
-            FROM order_items
-            WHERE order_id = %s
-            ORDER BY item_id
+                oi.product_id,
+                oi.product_name_english,
+                pm.product_name_arabic,   -- ✅ ADD THIS
+                oi.quantity,
+                oi.price_per_unit,
+                oi.discount,
+                oi.total_amount
+            FROM order_items oi
+            JOIN product_management pm 
+                ON pm.product_id = oi.product_id
+            WHERE oi.order_id = %s
+            ORDER BY oi.item_id
             """,
             (order_id,),
         )

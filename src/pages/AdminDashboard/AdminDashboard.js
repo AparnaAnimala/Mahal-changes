@@ -93,7 +93,7 @@
 //   useEffect(() => {
 //     if (!ADMIN_TOKEN) return;
 
-//     fetch("http://127.0.0.1:5000/api/v1/admin/dashboard-metrics", {
+//     fetch("http://192.168.2.21:5000/api/v1/admin/dashboard-metrics", {
 //       headers: {
 //         Authorization: `Bearer ${ADMIN_TOKEN}`,
 //       },
@@ -339,7 +339,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (!ADMIN_TOKEN) return;
 
-    fetch("http://127.0.0.1:5000/api/v1/admin/dashboard-metrics", {
+    fetch("http://192.168.2.21:5000/api/v1/admin/dashboard-metrics", {
       headers: {
         Authorization: `Bearer ${ADMIN_TOKEN}`,
       },

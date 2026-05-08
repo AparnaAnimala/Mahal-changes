@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/admincredit.css";
-const API = "http://127.0.0.1:5000/api";
+const API = "http://192.168.2.21:5000/api";
 
 export default function AdminCreditManagement() {
 
@@ -179,17 +179,17 @@ const filteredRestaurants = restaurants.filter(r => {
 
           <div className="stat_card">
             <p>Total Limit</p>
-            <h3>QAR {summary.total_limit}</h3>
+            <h3>QAR  {summary.total_limit}</h3>
           </div>
 
           <div className="stat_card">
             <p>Total Used</p>
-            <h3>QAR {summary.total_used}</h3>
+            <h3>QAR  {summary.total_used}</h3>
           </div>
 
           <div className="stat_card">
             <p>Total Available</p>
-            <h3>QAR {summary.total_available}</h3>
+            <h3>QAR  {summary.total_available}</h3>
           </div>
 
           <div className="stat_card">

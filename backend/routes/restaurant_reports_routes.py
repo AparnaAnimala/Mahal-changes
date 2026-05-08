@@ -60,10 +60,14 @@ def purchase_report():
                 oh.total_amount,
                 oh.status,
                 oh.supplier_id,
-                sr.company_name_english AS supplier_name,
+                sr.company_name_english,
+                sr.company_name_arabic,
 
                 oi.product_id,
                 oi.product_name_english,
+                
+                pm.product_name_arabic,
+                
                 oi.quantity,
                 oi.total_amount AS item_total
 
@@ -74,6 +78,9 @@ def purchase_report():
 
             JOIN supplier_registration sr
                 ON sr.supplier_id = oh.supplier_id
+            
+            LEFT JOIN product_management pm   -- ✅ ADD JOIN
+                ON pm.product_id = oi.product_id
 
             WHERE oh.restaurant_id = %s
 
@@ -112,7 +119,8 @@ def grn_report():
                 gh.status,
                 gh.created_at,
 
-                sr.company_name_english AS supplier_name,
+                sr.company_name_english,
+                sr.company_name_arabic,
 
                 COALESCE(SUM(gi.received_quantity), 0) AS received_qty,
                 COUNT(gi.grn_item_id) AS total_items
@@ -132,7 +140,8 @@ def grn_report():
                 gh.order_id,
                 gh.status,
                 gh.created_at,
-                sr.company_name_english
+                sr.company_name_english,
+                sr.company_name_arabic
 
             ORDER BY gh.created_at DESC
         """, (restaurant_id,))
@@ -167,7 +176,8 @@ def supplier_report():
         cur.execute("""
             SELECT
                 sr.supplier_id,
-                sr.company_name_english AS supplier_name,
+                sr.company_name_english,
+                sr.company_name_arabic,
 
                 COUNT(DISTINCT oh.order_id) AS total_orders,
                 COALESCE(SUM(oh.total_amount), 0) AS total_purchase,
@@ -227,6 +237,7 @@ def invoice_report():
                 ih.grand_total,   -- ✅ CORRECT COLUMN
 
                 sr.company_name_english AS supplier_name,
+                sr.company_name_arabic AS supplier_name_arabic,
 
                 COUNT(ii.invoice_item_id) AS total_items
 
@@ -248,7 +259,8 @@ def invoice_report():
                 ih.invoice_status,
                 ih.payment_status,
                 ih.grand_total,
-                sr.company_name_english
+                sr.company_name_english,
+                sr.company_name_arabic
 
             ORDER BY ih.invoice_date DESC
         """, (restaurant_id,))
