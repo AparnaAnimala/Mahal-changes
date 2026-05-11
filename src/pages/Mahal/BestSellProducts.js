@@ -10,7 +10,7 @@ import "swiper/css/navigation";
 
 import bannerImg from "../../images/side_img1.jpg";
 
-const API_BASE = "http://192.168.2.21:5000"; // ✅ SAME AS SECOND FILE
+const API_BASE = "http://192.168.2.22:5000"; // ✅ SAME AS SECOND FILE
 
 /* PRICE FIX */
 const parsePrice = (val) => {

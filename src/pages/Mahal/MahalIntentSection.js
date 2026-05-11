@@ -102,7 +102,7 @@
 // import dairy from "../../images/product_img_5.jpg";
 // // import bulk from "../../images/product_img_6.jpg";
 
-// const API_BASE_URL = "http://192.168.2.21:5000/api";
+// const API_BASE_URL = "http://192.168.2.22:5000/api";
 
 // /* COLORS */
 // const COLORS = [
@@ -229,7 +229,7 @@ import spices from "../../images/product_img_4.jpg";
 import dairy from "../../images/product_img_5.jpg";
 import bulk from "../../images/product_img_6.jpg";
 
-const API_BASE_URL = "http://192.168.2.21:5000/api";
+const API_BASE_URL = "http://192.168.2.22:5000/api";
 
 const COLORS = [
   "#2ecc71", "#f1c40f", "#e74c3c",
@@ -255,7 +255,7 @@ const MahalIntentSection = () => {
           if (cat.image && cat.image !== "null") {
             imgUrl = cat.image.startsWith("http")
               ? cat.image
-              : `http://192.168.2.21:5000${cat.image}`;
+              : `http://192.168.2.22:5000${cat.image}`;
           } else {
             imgUrl = FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
           }

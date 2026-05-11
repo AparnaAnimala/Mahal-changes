@@ -13,7 +13,7 @@ const Sidebar = () => {
   const [startToolsTour, setStartToolsTour] = useState(
     localStorage.getItem("startToolsTour")
   );
-  const API = "http://192.168.2.21:5000/api/v1";
+  const API = "http://192.168.2.22:5000/api/v1";
 
   const [issueCount, setIssueCount] = useState(0);
   const [orderCount, setOrderCount] = useState(0);

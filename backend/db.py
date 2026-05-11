@@ -29,7 +29,7 @@
 #             host = os.getenv("DB_HOST", "localhost")
 #             database = os.getenv("DB_NAME", "MAHALDATABASE")
 #             user = os.getenv("DB_USER", "postgres")
-#             password = os.getenv("DB_PASS", "Appu1718")
+#             password = os.getenv("DB_PASS", "S@ndeep9392")
 #             port = os.getenv("DB_PORT", "5432")
 #             sslmode = "disable"  # Local DB usually does not use SSL
 
@@ -80,10 +80,10 @@
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Load .env values
-load_dotenv()
+# load_dotenv()
 
 # =====================================================
 #  ONLY LOCAL DATABASE IS ENABLED
@@ -98,10 +98,10 @@ def get_db_connection():
     No leaks.
     """
     try:
-        host = os.getenv("DB_HOST", "localhost")
+        host = "127.0.0.1"
         database = os.getenv("DB_NAME", "MAHALDATABASE")
         user = os.getenv("DB_USER", "postgres")
-        password = os.getenv("DB_PASS", "Appu1718")
+        password = "S@ndeep9392"
         port = os.getenv("DB_PORT", "5432")
 
         conn = psycopg2.connect(

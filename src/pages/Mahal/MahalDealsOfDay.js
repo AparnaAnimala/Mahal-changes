@@ -165,7 +165,7 @@
 //   const fetchDeals = async () => {
 //     try {
 //       const res = await axios.get(
-//         "http://192.168.2.21:5000/api/deals-of-the-day"
+//         "http://192.168.2.22:5000/api/deals-of-the-day"
 //       );
 
 //       let apiData = [];
@@ -187,7 +187,7 @@
 //         img:
 //           d.img1 ||
 //           (d.product_id
-//             ? `http://192.168.2.21:5000/api/image/${d.product_id}/0`
+//             ? `http://192.168.2.22:5000/api/image/${d.product_id}/0`
 //             : "/fallback.png"),
 
 //         oldPrice: d.old_price || 0,
@@ -325,7 +325,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const API_BASE = "http://192.168.2.21:5000/api";
+const API_BASE = "http://192.168.2.22:5000/api";
 
 const MahalDealsOfDay = () => {
   const [deals, setDeals] = useState([]);
@@ -338,7 +338,7 @@ const MahalDealsOfDay = () => {
   const fetchDeals = async () => {
     try {
       const res = await axios.get(
-        "http://192.168.2.21:5000/api/deals-of-the-day"
+        "http://192.168.2.22:5000/api/deals-of-the-day"
       );
 
       let apiData = [];
@@ -358,7 +358,7 @@ const MahalDealsOfDay = () => {
         img:
           d.img1 ||
           (d.product_id
-            ? `http://192.168.2.21:5000/api/image/${d.product_id}/0`
+            ? `http://192.168.2.22:5000/api/image/${d.product_id}/0`
             : "/fallback.png"),
         oldPrice: d.old_price || 0,
         price: d.price || d.price_per_unit || 0,

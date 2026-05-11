@@ -144,7 +144,7 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import axios from "axios";
 
-const API = "http://192.168.2.21:5000/api";
+const API = "http://192.168.2.22:5000/api";
 
 const HotDealsCarousel = () => {
   const [deals, setDeals] = useState([]);
@@ -381,7 +381,7 @@ export default HotDealsCarousel;
 // import "swiper/css";
 // import axios from "axios";
 
-// const API = "http://192.168.2.21:5000/api";
+// const API = "http://192.168.2.22:5000/api";
 
 // const HotDealsCarousel = () => {
 //   const [deals, setDeals] = useState([]);

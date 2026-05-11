@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/admincredit.css";
-const API = "http://192.168.2.21:5000/api";
+const API = "http://192.168.2.22:5000/api";
 
 export default function AdminCreditManagement() {
 

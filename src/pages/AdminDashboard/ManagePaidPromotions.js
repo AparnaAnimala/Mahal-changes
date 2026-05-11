@@ -4,7 +4,7 @@ import axios from "axios";
 import Select from "react-select";
 import "../css/ManagePaidPromotions.css";
 
-const API = "http://192.168.2.21:5000/api/admin/promotions";
+const API = "http://192.168.2.22:5000/api/admin/promotions";
 
 export default function ManagePaidPromotions() {
 

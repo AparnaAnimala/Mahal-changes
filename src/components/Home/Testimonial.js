@@ -1,12 +1,14 @@
+
+
 // import React from "react";
+// import { useTranslation } from "react-i18next";
 // import Slider from "react-slick";
 
-// import bgImg from "../../images/testimonial_bg.jpg";
 // import user1 from "../../images/testimonial_img_1.jpg";
 // import user2 from "../../images/testimonial_img_2.jpg";
 // import user3 from "../../images/testimonial_img_3.jpg";
 
-// /* ---------- CUSTOM ARROWS ---------- */
+// /* ---------- ARROWS ---------- */
 // const NextArrow = ({ onClick }) => (
 //   <div className="mahal-testi-arrow next" onClick={onClick}>
 //     <i className="fas fa-chevron-right"></i>
@@ -27,6 +29,8 @@
 // ];
 
 // const Testimonial = () => {
+//   const { t } = useTranslation();
+
 //   const settings = {
 //     dots: true,
 //     arrows: true,
@@ -49,18 +53,22 @@
 //   };
 
 //   return (
-//     <section
-//       className="mahal-testimonial-section" 
-//     >
+//     <section className="mahal-testimonial-section">
 //       <div className="container">
 
 //         {/* HEADING */}
 //         <div className="row mb-5">
 //           <div className="col-lg-10 m-auto text-center">
-//                <h6 className="mahal-subtitle">Testimonials</h6>
+
+//             <h6 className="mahal-subtitle">
+//               {t("testimonial.subtitle")}
+//             </h6>
+
 //             <h2 className="mahal-title white">
-//               Trusted by <span>Restaurants & Businesses</span>
+//               {t("testimonial.title1")}{" "}
+//               <span>{t("testimonial.title2")}</span>
 //             </h2>
+
 //           </div>
 //         </div>
 
@@ -81,15 +89,14 @@
 //                 </div>
 
 //                 <p className="review">
-//                   MAHAL has transformed the way we source food supplies.
-//                   Transparent pricing and reliable delivery make operations smooth.
+//                   {t("testimonial.review")}
 //                 </p>
 
 //                 <div className="user">
 //                   <img src={item.img} alt={item.name} />
 //                   <div>
 //                     <h4>{item.name}</h4>
-//                     <span>Business Customer</span>
+//                     <span>{t("testimonial.role")}</span>
 //                   </div>
 //                 </div>
 
@@ -97,8 +104,6 @@
 //             </div>
 //           ))}
 //         </Slider>
-
-      
 
 //       </div>
 //     </section>
@@ -108,13 +113,17 @@
 // export default Testimonial;
 
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Slider from "react-slick";
+import axios from "axios";
 
+/* ---------- FALLBACK IMAGES ---------- */
 import user1 from "../../images/testimonial_img_1.jpg";
 import user2 from "../../images/testimonial_img_2.jpg";
 import user3 from "../../images/testimonial_img_3.jpg";
+
+const API = "http://localhost:5000/api";
 
 /* ---------- ARROWS ---------- */
 const NextArrow = ({ onClick }) => (
@@ -129,15 +138,39 @@ const PrevArrow = ({ onClick }) => (
   </div>
 );
 
-/* ---------- DATA ---------- */
-const testimonials = [
+/* ---------- FALLBACK DATA ---------- */
+const fallbackTestimonials = [
   { name: "Bartholomew", rating: 5, img: user1 },
   { name: "Nigel Nigel", rating: 4.5, img: user2 },
   { name: "Robert Deni", rating: 3.5, img: user3 },
 ];
 
 const Testimonial = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const [testimonials, setTestimonials] = useState([]);
+
+  // ===============================
+  // FETCH REVIEWS
+  // ===============================
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get(`${API}/reviews/all`);
+
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setTestimonials(res.data);
+      } else {
+        setTestimonials(fallbackTestimonials);
+      }
+    } catch (err) {
+      console.error("Failed to fetch reviews", err);
+      setTestimonials(fallbackTestimonials);
+    }
+  };
 
   const settings = {
     dots: true,
@@ -186,26 +219,55 @@ const Testimonial = () => {
             <div key={index}>
               <div className="mahal-testimonial-card">
 
+                {/* RATING */}
                 <div className="rating">
-                  {[...Array(Math.floor(item.rating))].map((_, i) => (
+                  {[...Array(Math.floor(Number(item.rating || 0)))].map((_, i) => (
                     <i key={i} className="fas fa-star"></i>
                   ))}
-                  {item.rating % 1 !== 0 && (
+
+                  {Number(item.rating || 0) % 1 !== 0 && (
                     <i className="fas fa-star-half-alt"></i>
                   )}
+
                   <span>{item.rating}</span>
                 </div>
 
+                {/* REVIEW */}
                 <p className="review">
-                  {t("testimonial.review")}
+                  {item.review_text ||
+                    t("testimonial.review")}
                 </p>
 
+                {/* USER */}
                 <div className="user">
-                  <img src={item.img} alt={item.name} />
+
+                  {/* REVIEW IMAGE / FALLBACK IMAGE */}
+                  <img
+                    src={
+                      item.review_id
+                        ? `${API}/reviews/image/${item.review_id}`
+                        : item.img
+                    }
+                    alt={item.product_name || item.name}
+                    onError={(e) => {
+                      e.target.src = user1;
+                    }}
+                  />
+
                   <div>
-                    <h4>{item.name}</h4>
-                    <span>{t("testimonial.role")}</span>
+                    <h4>
+                      {item.product_name ||
+                        item.name ||
+                        "Customer"}
+                    </h4>
+
+                    <span>
+                      {i18n.language === "ar"
+                        ? "عميل أعمال"
+                        : t("testimonial.role")}
+                    </span>
                   </div>
+
                 </div>
 
               </div>

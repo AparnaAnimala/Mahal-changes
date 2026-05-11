@@ -88,7 +88,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const API = "http://192.168.2.21:5000/api/products";
+const API = "http://192.168.2.22:5000/api/products";
 
 const FeaturedSections = () => {
   const [sections, setSections] = useState([]);

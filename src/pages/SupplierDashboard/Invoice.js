@@ -102,7 +102,7 @@ import React, { useEffect, useState } from "react";
 import InvoiceDetailsModal from "./InvoiceDetailsModal";
 import "../css/receipt.css";
 import { useTranslation } from "react-i18next";
-const API = "http://192.168.2.21:5000/api/v1/invoice";
+const API = "http://192.168.2.22:5000/api/v1/invoice";
 
 const Invoice = () => {
   const [invoices, setInvoices] = useState([]);

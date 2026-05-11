@@ -1,7 +1,7 @@
 // import React, { useEffect, useRef, useState } from "react";
 // import axios from "axios";
 
-// const API_BASE = "http://192.168.2.21:5000";
+// const API_BASE = "http://192.168.2.22:5000";
 
 // const MahalStealDeals = () => {
 //   const scrollRef = useRef(null);
@@ -170,7 +170,7 @@
 // import React, { useEffect, useRef, useState } from "react";
 // import axios from "axios";
 
-// const API_BASE = "http://192.168.2.21:5000";
+// const API_BASE = "http://192.168.2.22:5000";
 
 // const MahalStealDeals = () => {
 //   const scrollRef = useRef(null);
@@ -378,7 +378,7 @@
 // import React, { useEffect, useRef, useState } from "react";
 // import axios from "axios";
 
-// const API_BASE = "http://192.168.2.21:5000";
+// const API_BASE = "http://192.168.2.22:5000";
 
 // const MahalStealDeals = () => {
 //   const scrollRef = useRef(null);
@@ -614,7 +614,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-const API_BASE = "http://192.168.2.21:5000/api";
+const API_BASE = "http://192.168.2.22:5000/api";
 
 const MahalStealDeals = () => {
   const scrollRef = useRef(null);

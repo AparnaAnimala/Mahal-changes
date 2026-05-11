@@ -121,7 +121,7 @@
 // import OrderDetailsModal from "./OrderDetailsModal";
 // import ChatModal from "./ChatModal";
 
-// const API = "http://192.168.2.21:5000/api/v1/orders";
+// const API = "http://192.168.2.22:5000/api/v1/orders";
 
 // const Orders = () => {
 //   const token = localStorage.getItem("token");
@@ -313,7 +313,7 @@
 // import AssignDeliveryModal from "./AssignDeliveryModal";
 // import { useNavigate } from "react-router-dom";
 
-// const API = "http://192.168.2.21:5000/api/v1/orders";
+// const API = "http://192.168.2.22:5000/api/v1/orders";
 // const normalizeStatus = (status) => {
 //   if (!status || typeof status !== "string") return "UNKNOWN";
 
@@ -814,7 +814,7 @@ import { useSearchParams } from "react-router-dom";
 import AssignDeliveryModal from "./AssignDeliveryModal";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-const API = "http://192.168.2.21:5000/api/v1/orders";
+const API = "http://192.168.2.22:5000/api/v1/orders";
 const normalizeStatus = (status) => {
   if (!status || typeof status !== "string") return "UNKNOWN";
 

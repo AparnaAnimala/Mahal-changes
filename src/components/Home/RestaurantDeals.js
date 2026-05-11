@@ -4,7 +4,7 @@
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
 
-// const API_BASE = "http://192.168.2.21:5000";
+// const API_BASE = "http://192.168.2.22:5000";
 
 // const RestaurantDeals = () => {
 //   const [deals, setDeals] = useState([]);
@@ -163,7 +163,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const API_BASE = "http://192.168.2.21:5000";
+const API_BASE = "http://192.168.2.22:5000";
 
 const RestaurantDeals = () => {
   const { t } = useTranslation();

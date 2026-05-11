@@ -54,7 +54,7 @@
 
 //     try {
 //       const res = await fetch(
-//         `http://192.168.2.21:5000/api/offers?supplier_id=${supplierId}`
+//         `http://192.168.2.22:5000/api/offers?supplier_id=${supplierId}`
 //       );
 //       const data = await res.json();
 //       setOffers(Array.isArray(data) ? data : []);
@@ -69,7 +69,7 @@
 
 //     try {
 //       const res = await fetch(
-//         `http://192.168.2.21:5000/api/products?supplier_id=${supplierId}`
+//         `http://192.168.2.22:5000/api/products?supplier_id=${supplierId}`
 //       );
 //       const data = await res.json();
 //       setProducts(Array.isArray(data) ? data : []);
@@ -84,7 +84,7 @@
 
 //     try {
 //       await fetch(
-//         `http://192.168.2.21:5000/api/offers/${offerId}?supplier_id=${supplierId}`,
+//         `http://192.168.2.22:5000/api/offers/${offerId}?supplier_id=${supplierId}`,
 //         { method: "DELETE" }
 //       );
 //       fetchOffers();
@@ -227,7 +227,7 @@ const Offers = () => {
     if (!supplierId) return;
     try {
       const res = await fetch(
-        `http://192.168.2.21:5000/api/offers?supplier_id=${supplierId}`
+        `http://192.168.2.22:5000/api/offers?supplier_id=${supplierId}`
       );
       const data = await res.json();
       setOffers(Array.isArray(data) ? data : []);
@@ -240,7 +240,7 @@ const Offers = () => {
     if (!supplierId) return;
     try {
       const res = await fetch(
-        `http://192.168.2.21:5000/api/products?supplier_id=${supplierId}`
+        `http://192.168.2.22:5000/api/products?supplier_id=${supplierId}`
       );
       const data = await res.json();
       setProducts(Array.isArray(data) ? data : []);
@@ -259,7 +259,7 @@ const Offers = () => {
     if (!window.confirm("Delete this offer?")) return;
     try {
       await fetch(
-        `http://192.168.2.21:5000/api/offers/${offerId}?supplier_id=${supplierId}`,
+        `http://192.168.2.22:5000/api/offers/${offerId}?supplier_id=${supplierId}`,
         { method: "DELETE" }
       );
       fetchOffers();
@@ -271,7 +271,7 @@ const Offers = () => {
   /* ================= HELPERS ================= */
   const getOfferImage = (o) =>
     o.image_url
-      ? `http://192.168.2.21:5000${o.image_url}`
+      ? `http://192.168.2.22:5000${o.image_url}`
       : "/placeholder.png";
 
   const getCurrentPrice = (productId) => {

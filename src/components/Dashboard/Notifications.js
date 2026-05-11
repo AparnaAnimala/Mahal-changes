@@ -1,9 +1,9 @@
 // import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 // import "../../pages/css/status.css";
-// const API = "http://192.168.2.21:5000/api/v1/orders";
-// const ORDERS_API = "http://192.168.2.21:5000/api/v1/orders";
-// const PROMO_API = "http://192.168.2.21:5000/api/v1";
+// const API = "http://192.168.2.22:5000/api/v1/orders";
+// const ORDERS_API = "http://192.168.2.22:5000/api/v1/orders";
+// const PROMO_API = "http://192.168.2.22:5000/api/v1";
 
 // const Notifications = () => {
 //   const [notifications, setNotifications] = useState([]);
@@ -174,9 +174,9 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../pages/css/status.css";
 
-const API = "http://192.168.2.21:5000/api/v1/orders";
-const ORDERS_API = "http://192.168.2.21:5000/api/v1/orders";
-const PROMO_API = "http://192.168.2.21:5000/api/v1";
+const API = "http://192.168.2.22:5000/api/v1/orders";
+const ORDERS_API = "http://192.168.2.22:5000/api/v1/orders";
+const PROMO_API = "http://192.168.2.22:5000/api/v1";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);

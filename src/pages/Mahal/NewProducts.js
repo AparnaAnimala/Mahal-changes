@@ -236,7 +236,7 @@
 // import { Link } from "react-router-dom";
 // import { FaStar, FaShoppingCart, FaEye, FaHeart } from "react-icons/fa";
 
-// const API_BASE = "http://192.168.2.21:5000";
+// const API_BASE = "http://192.168.2.22:5000";
 
 // const ITEMS_PER_PAGE = 12; // ✅ SHOW 12 PRODUCTS
 

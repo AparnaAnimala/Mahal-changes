@@ -6,7 +6,7 @@ import {
 } from "recharts";
 
 
-const API = "http://192.168.2.21:5000/api/v1/admin/dashboard-metrics";
+const API = "http://192.168.2.22:5000/api/v1/admin/dashboard-metrics";
 
 const COLORS = {
   Pending: "#ff9800",

@@ -77,7 +77,7 @@
 
 //   try {
 
-//     const res = await fetch("http://192.168.2.21:5000/api/payment/", {
+//     const res = await fetch("http://192.168.2.22:5000/api/payment/", {
 //       method: "POST",
 //       headers: {
 //         "Content-Type": "application/json",
@@ -95,7 +95,7 @@
 //     if (!res.ok) throw new Error(data.error);
 
 //     // ✅ CART CLEAR AFTER SUCCESS
-//     await fetch("http://192.168.2.21:5000/api/cart/clear", {
+//     await fetch("http://192.168.2.22:5000/api/cart/clear", {
 //       method: "POST",
 //       headers: {
 //         "Authorization": `Bearer ${token}`
@@ -138,7 +138,7 @@
 // //   if (!validate()) return;
 
 // //   try {
-// //     const res = await fetch("http://192.168.2.21:5000/api/payment/", {
+// //     const res = await fetch("http://192.168.2.22:5000/api/payment/", {
 // //       method: "POST",
 // //       headers: {
 // //         "Content-Type": "application/json",
@@ -483,7 +483,7 @@ const handlePay = async () => {
 
   try {
 
-    const res = await fetch("http://192.168.2.21:5000/api/payment/", {
+    const res = await fetch("http://192.168.2.22:5000/api/payment/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -508,7 +508,7 @@ const handlePay = async () => {
     localStorage.setItem("success_order_id", orderId);
 
     // ✅ CLEAR CART
-    await fetch("http://192.168.2.21:5000/api/cart/clear", {
+    await fetch("http://192.168.2.22:5000/api/cart/clear", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
@@ -533,7 +533,7 @@ useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch("http://192.168.2.21:5000/api/restaurant/credit-info", {
+  fetch("http://192.168.2.22:5000/api/restaurant/credit-info", {
     headers: {
       Authorization: `Bearer ${token}`
     }

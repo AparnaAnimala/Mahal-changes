@@ -132,6 +132,7 @@ textarea {
   border: 1px solid #eee;
   font-size: 16px;
   font-weight: 400;
+  margin-top: 17px;
   color: var(--colorBlack);
 }
 
@@ -139,7 +140,11 @@ input::placeholder,
 textarea::placeholder {
   color: #828281;
 }
-
+#hero_title_1{
+  font-size: 80px;
+    font-weight: 700;
+    color: white;
+}
 button {
   border: none;
 }
@@ -10337,22 +10342,24 @@ section {
   background: #fff;
   border-radius: 30px;
   padding: 4px 6px 4px 14px;
-  width: 420px;
+  width: 550px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .search_bar {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 14px;
-  background: transparent;
-  flex: 1;
-  padding: 10px 15px;
-  color: var(--paraColor);
-  width: 300px;
-  max-width: 100%;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    background: transparent;
+    flex: 1 1;
+    padding: 7px 14px;
+    margin-top: -5px;
+    color: var(--paraColor);
+    width: 300px;
+    max-width: 100%;
 }
+
 
 .search_btn {
   background: #f77d00;

@@ -1483,7 +1483,7 @@ DB_CONFIG = {
     "host": os.getenv("DB_HOST", "localhost"),
     "database": os.getenv("DB_NAME", "MAHALDATABASE"),
     "user": os.getenv("DB_USER", "postgres"),
-    "password": os.getenv("DB_PASSWORD", "Appu1718"),
+    "password": os.getenv("DB_PASSWORD", "S@ndeep9392"),
 }
 
 _db_pool = pool.SimpleConnectionPool(1, 20, **DB_CONFIG)
@@ -2446,7 +2446,7 @@ def delete_product(product_id):
 
 #             # for idx, img in enumerate(raw_images):
 #             #     image_urls.append(
-#             #         f"http://192.168.2.21:5000/product/image/{row['product_id']}/{idx}"
+#             #         f"http://192.168.2.22:5000/product/image/{row['product_id']}/{idx}"
 #             #     )
 
 #             # row["product_images"] = image_urls

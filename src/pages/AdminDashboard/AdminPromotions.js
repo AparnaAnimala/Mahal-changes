@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/Promotions.css";
 
-const API = "http://192.168.2.21:5000/api/v1/admin/promotions/mahal";
+const API = "http://192.168.2.22:5000/api/v1/admin/promotions/mahal";
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ const AdminPromotions = () => {
 
     try {
       const res = await axios.get(
-        `http://192.168.2.21:5000/api/v1/admin/products/search?q=${value}`
+        `http://192.168.2.22:5000/api/v1/admin/products/search?q=${value}`
       );
 
       setSearchResults(res.data.data);
@@ -84,7 +84,7 @@ const AdminPromotions = () => {
 
     try {
       const res = await axios.get(
-        `http://192.168.2.21:5000/api/v1/admin/categories/search?q=${value}`
+        `http://192.168.2.22:5000/api/v1/admin/categories/search?q=${value}`
       );
 
       setCategoryResults(res.data.data || []);
@@ -149,22 +149,22 @@ const AdminPromotions = () => {
   });
 
   useEffect(() => {
-    axios.get("http://192.168.2.21:5000/api/v1/master/city")
+    axios.get("http://192.168.2.22:5000/api/v1/master/city")
       .then(res => setCities(res.data.data));
 
-    axios.get("http://192.168.2.21:5000/api/v1/master/country")
+    axios.get("http://192.168.2.22:5000/api/v1/master/country")
       .then(res => setCountries(res.data.data));
   }, []);
 
   useEffect(() => {
-    axios.get("http://192.168.2.21:5000/api/v1/admin/suppliers")
+    axios.get("http://192.168.2.22:5000/api/v1/admin/suppliers")
       .then(res => setSuppliers(res.data.data));
   }, []);
 
   const handleSupplierChange = (supplierId) => {
     setSelectedSupplier(supplierId);
 
-    axios.get(`http://192.168.2.21:5000/api/v1/admin/supplier/${supplierId}/products`)
+    axios.get(`http://192.168.2.22:5000/api/v1/admin/supplier/${supplierId}/products`)
       .then(res => setProducts(res.data.data));
   };
 
@@ -1003,7 +1003,7 @@ const AdminPromotions = () => {
                   }
 
                   const res = await axios.get(
-                    `http://192.168.2.21:5000/api/v1/admin/categories/search?q=${value}`
+                    `http://192.168.2.22:5000/api/v1/admin/categories/search?q=${value}`
                   );
 
                   setFestivalCategories(res.data.data || []);
@@ -1017,7 +1017,7 @@ const AdminPromotions = () => {
                 className="result_item"
                 onClick={async () => {
                   const res = await axios.get(
-                    `http://192.168.2.21:5000/api/v1/admin/subcategories/${cat.category_id}`
+                    `http://192.168.2.22:5000/api/v1/admin/subcategories/${cat.category_id}`
                   );
 
                   setFestivalSubcategories(res.data.data || []);
@@ -1036,7 +1036,7 @@ const AdminPromotions = () => {
                     const subId = e.target.value;
 
                     const res = await axios.get(
-                      `http://192.168.2.21:5000/api/v1/admin/subcategory/${subId}/products`
+                      `http://192.168.2.22:5000/api/v1/admin/subcategory/${subId}/products`
                     );
 
                     setFestivalProducts(res.data.data || []);

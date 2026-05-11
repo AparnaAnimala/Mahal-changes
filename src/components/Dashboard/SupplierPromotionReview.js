@@ -14,7 +14,7 @@
 //     const fetchPromotion = async () => {
 //       try {
 //         const res = await axios.get(
-//           `http://192.168.2.21:5000/api/v1/promotions/${promoId}`,
+//           `http://192.168.2.22:5000/api/v1/promotions/${promoId}`,
 //           { headers: { Authorization: `Bearer ${token}` } }
 //         );
 //         setPromotion(res.data);
@@ -32,7 +32,7 @@
 //     const fetchProducts = async () => {
 //       try {
 //         const res = await axios.get(
-//           `http://192.168.2.21:5000/api/v1/promotions/${promoId}/products`,
+//           `http://192.168.2.22:5000/api/v1/promotions/${promoId}/products`,
 //           { headers: { Authorization: `Bearer ${token}` } }
 //         );
 //         setProducts(res.data);
@@ -49,7 +49,7 @@
 //   const acceptPromotion = async () => {
 //     try {
 //       const res = await axios.post(
-//         `http://192.168.2.21:5000/api/v1/supplier/promotions/${promoId}/accept`,
+//         `http://192.168.2.22:5000/api/v1/supplier/promotions/${promoId}/accept`,
 //         {},
 //         { headers: { Authorization: `Bearer ${token}` } }
 //       );
@@ -66,7 +66,7 @@
 //   const rejectPromotion = async () => {
 //     try {
 //       const res = await axios.post(
-//         `http://192.168.2.21:5000/api/v1/supplier/promotions/${promoId}/reject`,
+//         `http://192.168.2.22:5000/api/v1/supplier/promotions/${promoId}/reject`,
 //         {},
 //         { headers: { Authorization: `Bearer ${token}` } }
 //       );
@@ -220,7 +220,7 @@ const SupplierPromotionReview = () => {
     const fetchPromotion = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.2.21:5000/api/v1/promotions/${promoId}?lang=${i18n.language}`,
+          `http://192.168.2.22:5000/api/v1/promotions/${promoId}?lang=${i18n.language}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setPromotion(res.data);
@@ -238,7 +238,7 @@ const SupplierPromotionReview = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.2.21:5000/api/v1/promotions/${promoId}/products?lang=${i18n.language}`,
+          `http://192.168.2.22:5000/api/v1/promotions/${promoId}/products?lang=${i18n.language}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setProducts(res.data);
@@ -255,7 +255,7 @@ const SupplierPromotionReview = () => {
   const acceptPromotion = async () => {
     try {
       const res = await axios.post(
-        `http://192.168.2.21:5000/api/v1/supplier/promotions/${promoId}/accept`,
+        `http://192.168.2.22:5000/api/v1/supplier/promotions/${promoId}/accept`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -270,7 +270,7 @@ const SupplierPromotionReview = () => {
   const rejectPromotion = async () => {
     try {
       const res = await axios.post(
-        `http://192.168.2.21:5000/api/v1/supplier/promotions/${promoId}/reject`,
+        `http://192.168.2.22:5000/api/v1/supplier/promotions/${promoId}/reject`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

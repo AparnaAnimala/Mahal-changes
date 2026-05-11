@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 
-const API_BASE = "http://192.168.2.21:5000/api/v1/coupons";
+const API_BASE = "http://192.168.2.22:5000/api/v1/coupons";
 
 export default function CouponManagement() {
   const token = localStorage.getItem("admin_token");

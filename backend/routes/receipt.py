@@ -12,7 +12,7 @@ def get_db():
         host="localhost",
         database="MAHALDATABASE",
         user="postgres",
-        password="Appu1718"
+        password="S@ndeep9392"
     )
 
 

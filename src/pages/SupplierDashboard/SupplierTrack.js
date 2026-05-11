@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import "../css/supplierTrack.css";
 import { useTranslation } from "react-i18next";
-const API = "http://192.168.2.21:5000/api/v1/orders";
+const API = "http://192.168.2.22:5000/api/v1/orders";
 
 /* =============================
    SIMPLE OWN DELIVERY FLOW

@@ -69,7 +69,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import serviceImg from "../../images/11.jpg";
+import serviceImg from "../../images/sup_about.jpg";
 
 const AboutService = () => {
   const { t, i18n } = useTranslation();

@@ -1,8 +1,8 @@
 // import React, { useState,useEffect } from "react";
 // import "../css/status.css";
 
-// // const API = "http://192.168.2.21:5000/api/v1/orders";
-// const API = "http://192.168.2.21:5000/api/v1/orders";
+// // const API = "http://192.168.2.22:5000/api/v1/orders";
+// const API = "http://192.168.2.22:5000/api/v1/orders";
 
 
 // /* ================================
@@ -40,7 +40,7 @@
 // };
 
 // useEffect(() => {
-//   fetch("http://192.168.2.21:5000/api/v1/delivery-boys", {
+//   fetch("http://192.168.2.22:5000/api/v1/delivery-boys", {
 //     headers: {
 //       Authorization: `Bearer ${localStorage.getItem("token")}`,
 //     },
@@ -276,7 +276,7 @@ import React, { useState, useEffect } from "react";
 import "../css/status.css";
 import { useTranslation } from "react-i18next";
 
-const API = "http://192.168.2.21:5000/api/v1/orders";
+const API = "http://192.168.2.22:5000/api/v1/orders";
 const PROD_URL = "https://anthracotic-rootlike-evelina.ngrok-free.dev";
 
 const AssignDeliveryModal = ({ order, onClose, onAssigned }) => {
@@ -301,7 +301,7 @@ const AssignDeliveryModal = ({ order, onClose, onAssigned }) => {
   };
 
   useEffect(() => {
-    fetch("http://192.168.2.21:5000/api/v1/delivery-boys", {
+    fetch("http://192.168.2.22:5000/api/v1/delivery-boys", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },

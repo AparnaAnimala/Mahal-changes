@@ -10,7 +10,7 @@ import {
     FaTimes,
 } from "react-icons/fa";
 
-const API_BASE = "http://192.168.2.21:5000/api/v1/admin/manage";
+const API_BASE = "http://192.168.2.22:5000/api/v1/admin/manage";
 
 
 
@@ -121,7 +121,7 @@ export default function AdminUserManagement() {
         const loadPermissions = async () => {
             try {
                 const res = await fetch(
-                    "http://192.168.2.21:5000/api/admin/auth/me",
+                    "http://192.168.2.22:5000/api/admin/auth/me",
                     {
                         headers: { Authorization: `Bearer ${token}` },
                     }

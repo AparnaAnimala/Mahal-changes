@@ -175,9 +175,10 @@
 
 
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE = "http://192.168.2.21:5000/api";
+const API_BASE = "http://192.168.2.22:5000/api";
 
 const MahalHomeSections = () => {
   const sectionRefs = useRef({});
@@ -292,6 +293,7 @@ const addToCart = (product) => {
 
 const ProductSection = React.forwardRef(
   ({ category, products, addToCart }, ref) => {
+     const navigate = useNavigate();
     const scrollRef = useRef(null);
 
     const scroll = (dir) => {
@@ -330,6 +332,8 @@ const ProductSection = React.forwardRef(
                   src={item.img || "/fallback.png"}
                   alt="product"
                   className="mahal-dummy-img"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/shopdetails/${item.id}`)}
                 />
 
                 {/* TITLE */}

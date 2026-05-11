@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { FaPowerOff, FaSignOutAlt, FaHistory } from "react-icons/fa";
-const API_BASE = "http://192.168.2.21:5000/api/v1/admin/monitor/supplier";
+const API_BASE = "http://192.168.2.22:5000/api/v1/admin/monitor/supplier";
 
 const TIMELINE_STEPS = [
   { key: "PLACED", label: "Order Placed" },
@@ -422,7 +422,7 @@ return (
               const newStatus = isActive ? "suspended" : "active";
 
               const res = await fetch(
-                `http://192.168.2.21:5000/api/v1/admin/suppliers/users/${userId}/status`,
+                `http://192.168.2.22:5000/api/v1/admin/suppliers/users/${userId}/status`,
                 {
                   method: "PATCH",
                   headers: {
@@ -477,7 +477,7 @@ return (
               if (!confirmLogout) return;
 
               const res = await fetch(
-                `http://192.168.2.21:5000/api/v1/admin/suppliers/users/${userId}/force-logout`,
+                `http://192.168.2.22:5000/api/v1/admin/suppliers/users/${userId}/force-logout`,
                 {
                   method: "POST",
                   headers: {

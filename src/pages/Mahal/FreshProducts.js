@@ -147,7 +147,7 @@ import { FaShoppingCart, FaHeart, FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE = "http://192.168.2.21:5000";
+const API_BASE = "http://192.168.2.22:5000";
 
 const TABS = [
   "Vegetables",

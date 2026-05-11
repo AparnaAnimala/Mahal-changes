@@ -3,7 +3,7 @@
 // import { useNavigate } from "react-router-dom";
 // import "../../pages/css/SupplierPromotionList.css";
 
-// const API = "http://192.168.2.21:5000/api/v1";
+// const API = "http://192.168.2.22:5000/api/v1";
 
 // const SupplierPromotionList = () => {
 
@@ -114,7 +114,7 @@ import { useNavigate } from "react-router-dom";
 import "../../pages/css/SupplierPromotionList.css";
 import { useTranslation } from "react-i18next";
 
-const API = "http://192.168.2.21:5000/api/v1";
+const API = "http://192.168.2.22:5000/api/v1";
 
 const SupplierPromotionList = () => {
 

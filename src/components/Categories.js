@@ -20,7 +20,7 @@ const STATIC_IMAGES = [img1, img2, img4, img6, img8];
 
 const PRICE_MIN = 0;
 const ITEMS_PER_PAGE = 12;
-const API_BASE_URL = "http://192.168.2.21:5000/api";
+const API_BASE_URL = "http://192.168.2.22:5000/api";
 
 const Categories = () => {
   const location = useLocation();
@@ -223,7 +223,7 @@ const getFlag = (country) => {
 
     axios
       .get(
-        `http://192.168.2.21:5000/api/restaurant/stores?restaurant_id=${restaurantId}`,
+        `http://192.168.2.22:5000/api/restaurant/stores?restaurant_id=${restaurantId}`,
         {
           headers: { Authorization: `Bearer ${TOKEN}` },
         }
@@ -612,11 +612,11 @@ const getFlag = (country) => {
                       (p.image && p.image.trim() !== "")
                         ? (p.image.startsWith("http")
                             ? p.image
-                            : `http://192.168.2.21:5000/${p.image}`)
+                            : `http://192.168.2.22:5000/${p.image}`)
                         : (p.img1 && p.img1.trim() !== "")
                           ? (p.img1.startsWith("http")
                               ? p.img1
-                              : `http://192.168.2.21:5000/${p.img1}`)
+                              : `http://192.168.2.22:5000/${p.img1}`)
                           : null
                     }
                     alt={p.name}
@@ -827,7 +827,7 @@ export default Categories;
 
 // const PRICE_MIN = 0;
 // const ITEMS_PER_PAGE = 12;
-// const API_BASE_URL = "http://192.168.2.21:5000/api";
+// const API_BASE_URL = "http://192.168.2.22:5000/api";
 
 // const Categories = () => {
 //   const location = useLocation();
@@ -1024,7 +1024,7 @@ export default Categories;
 
 //     axios
 //       .get(
-//         `http://192.168.2.21:5000/api/restaurant/stores?restaurant_id=${restaurantId}`,
+//         `http://192.168.2.22:5000/api/restaurant/stores?restaurant_id=${restaurantId}`,
 //         {
 //           headers: { Authorization: `Bearer ${TOKEN}` },
 //         }
@@ -1411,7 +1411,7 @@ export default Categories;
 //                             p.image
 //                               ? p.image.startsWith("http")
 //                                 ? p.image
-//                                 : `http://192.168.2.21:5000/${p.image}`
+//                                 : `http://192.168.2.22:5000/${p.image}`
 //                               : ""
 //                           }
 //                           alt={p.name}
