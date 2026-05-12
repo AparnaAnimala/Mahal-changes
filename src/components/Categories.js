@@ -628,16 +628,7 @@ const getFlag = (country) => {
 
                         
 
-                        {/* {offersMap[p.product_id || p.id] && (
-                          
-                            <span className=" verified-ribbon">
-                              {offersMap[p.product_id || p.id].offer_type === "Percentage"
-                                ? `${offersMap[p.product_id || p.id].discount_percentage}% OFF`
-                                : offersMap[p.product_id || p.id].offer_type === "Flat"
-                                ? `QAR ${offersMap[p.product_id || p.id].flat_amount} OFF`
-                                : `Buy ${offersMap[p.product_id || p.id].buy_quantity} Get ${offersMap[p.product_id || p.id].get_quantity}`}
-                            </span>
-                          )} */}
+                      
 
 
                        {offersMap[p.product_id || p.id] && (() => {
