@@ -256,7 +256,7 @@ useEffect(() => {
 
           {/* LEFT */}
           <div className="header_left">
-            <Link to="/restaurantdashboard/restaurantoffers" className="mahal_logo">
+            <Link to="/restaurantoffers" className="mahal_logo">
               <img src={logo} alt="logo" />
             </Link>
 
@@ -411,7 +411,7 @@ useEffect(() => {
 
               {showUserMenu && (
                 <div className="user_dropdown">
-                  <Link to="/my-profile/restuarent">My Profile</Link>
+                  <Link to={`/profile/${localStorage.getItem("role")}/${localStorage.getItem("linked_id")}`} >My Profile</Link>
                 </div>
               )}
             </div>

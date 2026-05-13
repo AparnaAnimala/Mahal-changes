@@ -139,12 +139,12 @@ const FeaturedSections = () => {
                     >
                       <div className="mm-featured-img">
                         <img
-  src={p.image || "https://via.placeholder.com/150"}
-  alt={p.name}
-  onError={(e) => {
-    e.target.src = "https://via.placeholder.com/150";
-  }}
-/>
+                          src={p.image || "https://via.placeholder.com/150"}
+                          alt={p.name}
+                          onError={(e) => {
+                            e.target.src = "https://via.placeholder.com/150";
+                          }}
+                        />
                       </div>
 
                       <span>{p.name}</span>
@@ -163,7 +163,7 @@ const FeaturedSections = () => {
 
             <span
               className="mm-featured-link"
-              onClick={() => navigate("/products")}
+              onClick={() => navigate("/CategorieList")}
               style={{ cursor: "pointer" }}
             >
               View all
