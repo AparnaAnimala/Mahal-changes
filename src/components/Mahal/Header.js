@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../styles/Mahal.css";
@@ -260,6 +256,17 @@ useEffect(() => {
               <img src={logo} alt="logo" />
             </Link>
 
+
+            {/* LOCATION */}
+            <div className="location_box">
+              <i className="fas fa-map-marker-alt"></i>
+              <span className="location_text">{locationText}</span>
+              <i className="fas fa-chevron-down"></i>
+            </div>
+
+
+
+
             {/* SEARCH */}
             <div className="search_wrapper" id="search" ref={searchRef}>
               <select
@@ -273,7 +280,6 @@ useEffect(() => {
                 <option value="Fruits">Fruits</option>
                 <option value="Groceries">Groceries</option>
               </select>
-
               <input
                 className="search_bar"
                 placeholder="Search for ingredients or products..."
@@ -392,12 +398,7 @@ useEffect(() => {
 
             </div>
 
-            {/* LOCATION */}
-            <div className="location_box">
-              <i className="fas fa-map-marker-alt"></i>
-              <span className="location_text">{locationText}</span>
-              <i className="fas fa-chevron-down"></i>
-            </div>
+            
           </div>
 
           {/* RIGHT */}
@@ -445,28 +446,4 @@ useEffect(() => {
 };
 
 export default Header;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
